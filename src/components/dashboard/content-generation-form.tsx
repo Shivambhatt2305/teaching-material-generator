@@ -134,108 +134,135 @@ const curriculumData = [
     {
         grade: "Grade 6",
         subjects: [
+            { name: "English", chapters: [
+                { name: "Prose and Poetry", topics: ["Understanding a Story", "Identifying Rhyme Schemes", "Literary Devices"] },
+                { name: "Grammar", topics: ["Parts of Speech Review", "Direct and Indirect Speech", "Active and Passive Voice"] }
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Knowing Our Numbers", topics: ["Large Numbers", "Estimation", "Roman Numerals"] },
+                { name: "Integers", topics: ["Representing Integers", "Addition and Subtraction of Integers"] },
+                { name: "Basic Geometry", topics: ["Lines and Angles", "Triangles and Quadrilaterals", "Circles"] }
+            ]},
             { name: "Science", chapters: [
                 { name: "Food: Where Does It Come From?", topics: ["Food Variety", "Plant and Animal Sources", "What Animals Eat"] },
                 { name: "Components of Food", topics: ["Carbohydrates, Fats, Proteins", "Vitamins and Minerals", "Balanced Diet"] },
                 { name: "Getting to Know Plants", topics: ["Herbs, Shrubs, and Trees", "Parts of a Plant: Root, Stem, Leaf, Flower", "Photosynthesis"] },
             ]},
-            { name: "History", chapters: [
-                { name: "The Indus Valley Civilization", topics: ["Town Planning", "Seals and Pottery", "Daily Life"] },
-                { name: "The Vedic Period", topics: ["The Four Vedas", "Early and Later Vedic Society", "Political System"] },
-                { name: "The Mauryan Empire", topics: ["Chandragupta Maurya", "Ashoka and his Dhamma", "Mauryan Administration"] },
-            ]},
-            { name: "Geography", chapters: [
-                { name: "The Earth in the Solar System", topics: ["Planets and Stars", "The Moon", "Asteroids and Meteoroids"] },
-                { name: "Motions of the Earth", topics: ["Rotation and Revolution", "Seasons", "Leap Year"] },
+            { name: "Social Studies", chapters: [
+                { name: "History: The Indus Valley Civilization", topics: ["Town Planning", "Seals and Pottery", "Daily Life"] },
+                { name: "History: The Vedic Period", topics: ["The Four Vedas", "Early and Later Vedic Society", "Political System"] },
+                { name: "Geography: The Earth in the Solar System", topics: ["Planets and Stars", "The Moon", "Asteroids and Meteoroids"] },
+                { name: "Civics: Understanding Diversity", topics: ["Diversity in India", "Unity in Diversity", "Prejudice and Discrimination"] },
             ]}
         ]
     },
     {
         grade: "Grade 7",
         subjects: [
+            { name: "English", chapters: [
+                { name: "Writing Skills", topics: ["Formal and Informal Letters", "Notice Writing", "Report Writing"] },
+                { name: "Advanced Grammar", topics: ["Clauses and Phrases", "Conjunctions", "Modals"] }
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Fractions and Decimals", topics: ["Multiplication and Division of Fractions", "Operations on Decimals"] },
+                { name: "Data Handling", topics: ["Mean, Median, Mode", "Bar Graphs", "Probability"] },
+                { name: "Algebraic Expressions", topics: ["Terms of an Expression", "Addition and Subtraction of Expressions", "Finding the Value of an Expression"] }
+            ]},
             { name: "Science", chapters: [
                 { name: "Nutrition in Plants and Animals", topics: ["Autotrophic and Heterotrophic Nutrition", "Human Digestive System", "Nutrition in Ruminants"] },
                 { name: "Acids, Bases, and Salts", topics: ["Indicators", "Neutralization", "Salts"] },
                 { name: "Weather, Climate and Adaptations", topics: ["Elements of Weather", "Climate", "Adaptations of Animals to Climate"] },
             ]},
-            { name: "History", chapters: [
-                { name: "The Delhi Sultanate", topics: ["The Slave Dynasty", "The Khalji and Tughlaq Dynasties", "Administration and Architecture"] },
-                { name: "The Mughal Empire", topics: ["Babur to Aurangzeb", "Mughal Administration and Art", "Decline of the Empire"] },
-            ]},
-            { name: "Geography", chapters: [
-                { name: "Our Environment", topics: ["Components of Environment", "Ecosystem", "Human Environment"] },
-                { name: "Inside Our Earth", topics: ["Layers of the Earth", "Rocks and Minerals", "The Rock Cycle"] },
+            { name: "Social Studies", chapters: [
+                { name: "History: The Delhi Sultanate", topics: ["The Slave Dynasty", "The Khalji and Tughlaq Dynasties", "Administration and Architecture"] },
+                { name: "History: The Mughal Empire", topics: ["Babur to Aurangzeb", "Mughal Administration and Art", "Decline of the Empire"] },
+                { name: "Geography: Our Environment", topics: ["Components of Environment", "Ecosystem", "Human Environment"] },
+                { name: "Civics: Role of the Government in Health", topics: ["Public and Private Healthcare", "Healthcare and Equality", "Case Studies"] },
             ]}
         ]
     },
     {
         grade: "Grade 8",
         subjects: [
+            { name: "English", chapters: [
+                { name: "Reading Comprehension", topics: ["Inferential Questions", "Summarizing a Passage", "Vocabulary in Context"] },
+                { name: "Literary Texts", topics: ["Analyzing Characters", "Understanding Plot and Theme", "Figurative Language"] }
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Rational Numbers", topics: ["Properties of Rational Numbers", "Representation on Number Line", "Rational Numbers between two numbers"] },
+                { name: "Linear Equations in One Variable", topics: ["Solving Equations", "Applications of Linear Equations"] },
+                { name: "Mensuration", topics: ["Area of Trapezium and Polygon", "Surface Area and Volume of Cuboid, Cube, Cylinder"] }
+            ]},
             { name: "Science", chapters: [
                 { name: "Microorganisms: Friend and Foe", topics: ["Viruses, Bacteria, Fungi", "Useful and Harmful Microorganisms", "Food Preservation"] },
                 { name: "Cell - Structure and Functions", topics: ["Discovery of the Cell", "Parts of a Cell", "Plant vs. Animal Cells"] },
                 { name: "Force and Pressure", topics: ["Force: A Push or a Pull", "Types of Forces", "Pressure"] },
             ]},
-            { name: "History", chapters: [
-                { name: "From Trade to Territory", topics: ["The East India Company", "The Battle of Plassey", "The Doctrine of Lapse"] },
-                { name: "The Great Uprising of 1857", topics: ["Causes of the Revolt", "Main Centers of the Revolt", "Consequences"] },
-                { name: "India After Independence", topics: ["Partition", "Integration of Princely States", "The Making of the Constitution"] },
-            ]},
-            { name: "Civics", chapters: [
-                { name: "The Indian Constitution", topics: ["Why do we need a Constitution?", "Key Features of the Indian Constitution", "Fundamental Rights and Duties"] },
-                { name: "Understanding Secularism", topics: ["What is Secularism?", "The Indian Model of Secularism", "Importance of Secularism"] },
+            { name: "Social Studies", chapters: [
+                { name: "History: From Trade to Territory", topics: ["The East India Company", "The Battle of Plassey", "The Doctrine of Lapse"] },
+                { name: "History: The Great Uprising of 1857", topics: ["Causes of the Revolt", "Main Centers of the Revolt", "Consequences"] },
+                { name: "Geography: Resources", topics: ["Types of Resources", "Conservation of Resources", "Sustainable Development"] },
+                { name: "Civics: The Indian Constitution", topics: ["Why do we need a Constitution?", "Key Features of the Indian Constitution", "Fundamental Rights and Duties"] },
             ]}
         ]
     },
     {
         grade: "Grade 9",
         subjects: [
-            { name: "Physics", chapters: [
-                { name: "Motion", topics: ["Distance and Displacement", "Velocity and Acceleration", "Equations of Motion", "Uniform Circular Motion"] },
-                { name: "Force and Laws of Motion", topics: ["Newton's First Law", "Newton's Second Law (F=ma)", "Newton's Third Law", "Conservation of Momentum"] },
-                { name: "Work and Energy", topics: ["Work Done by a Force", "Kinetic and Potential Energy", "Law of Conservation of Energy", "Power"] },
+            { name: "English", chapters: [
+                { name: "Prose Analysis", topics: ["The Fun They Had", "The Sound of Music", "A Truly Beautiful Mind"] },
+                { name: "Poetry Analysis", topics: ["The Road Not Taken", "Wind", "No Men Are Foreign"] }
             ]},
-            { name: "Chemistry", chapters: [
-                { name: "Matter in Our Surroundings", topics: ["States of Matter", "Interconversion of States", "Evaporation", "Latent Heat"] },
-                { name: "Is Matter Around Us Pure?", topics: ["Mixtures and Solutions", "Separating Components of a Mixture", "Physical and Chemical Changes"] },
+            { name: "Mathematics", chapters: [
+                { name: "Number Systems", topics: ["Real Numbers and their Decimal Expansions", "Laws of Exponents for Real Numbers"] },
+                { name: "Polynomials", topics: ["Remainder Theorem", "Factor Theorem", "Algebraic Identities"] },
+                { name: "Coordinate Geometry", topics: ["Cartesian System", "Plotting a Point in the Plane"] }
             ]},
-            { name: "Biology", chapters: [
-                { name: "The Fundamental Unit of Life", topics: ["Cell Theory", "Prokaryotic and Eukaryotic Cells", "Cell Organelles", "Cell Division"] },
-                { name: "Tissues", topics: ["Plant Tissues (Meristematic, Permanent)", "Animal Tissues (Epithelial, Connective, Muscular, Nervous)"] },
+            { name: "Science", chapters: [
+                { name: "Physics: Motion", topics: ["Distance and Displacement", "Velocity and Acceleration", "Equations of Motion", "Uniform Circular Motion"] },
+                { name: "Chemistry: Matter in Our Surroundings", topics: ["States of Matter", "Interconversion of States", "Evaporation", "Latent Heat"] },
+                { name: "Biology: The Fundamental Unit of Life", topics: ["Cell Theory", "Prokaryotic and Eukaryotic Cells", "Cell Organelles", "Cell Division"] },
             ]},
-            { name: "History", chapters: [
-                { name: "The French Revolution", topics: ["Causes", "The Reign of Terror", "Rise of Napoleon Bonaparte"] },
-                { name: "Socialism in Europe and the Russian Revolution", topics: ["The 1905 Revolution", "The October Revolution of 1917", "Stalinism"] },
+            { name: "Social Science", chapters: [
+                { name: "History: The French Revolution", topics: ["Causes", "The Reign of Terror", "Rise of Napoleon Bonaparte"] },
+                { name: "Geography: India - Size and Location", topics: ["Location and Size of India", "India and the World", "India's Neighbors"] },
+                { name: "Political Science: What is Democracy? Why Democracy?", topics: ["Features of Democracy", "Arguments for and against Democracy", "Broader Meanings of Democracy"] },
+                { name: "Economics: The Story of Village Palampur", topics: ["Factors of Production", "Farming in Palampur", "Non-farm activities in Palampur"] },
             ]}
         ]
     },
     {
         grade: "Grade 10",
         subjects: [
-            { name: "Physics", chapters: [
-                { name: "Light - Reflection and Refraction", topics: ["Reflection by Spherical Mirrors", "Refraction of Light", "Refraction by Spherical Lenses", "Power of a Lens"] },
-                { name: "Electricity", topics: ["Ohm's Law", "Resistors in Series and Parallel", "Heating Effect of Electric Current", "Electric Power"] },
-                { name: "Magnetic Effects of Electric Current", topics: ["Magnetic Field and Field Lines", "Electromagnetic Induction", "Electric Motor", "Electric Generator"] },
+            { name: "English", chapters: [
+                { name: "Prose", topics: ["A Letter to God", "Nelson Mandela: Long Walk to Freedom", "The Sermon at Benares"] },
+                { name: "Poetry", topics: ["Dust of Snow", "Fire and Ice", "The Trees", "Amanda!"] }
             ]},
-            { name: "Chemistry", chapters: [
-                { name: "Chemical Reactions and Equations", topics: ["Balancing Chemical Equations", "Types of Chemical Reactions", "Corrosion and Rancidity"] },
-                { name: "Acids, Bases and Salts", topics: ["pH Scale", "Important Acids, Bases, and Salts", "Making of Plaster of Paris"] },
-                { name: "Carbon and its Compounds", topics: ["Covalent Bonding in Carbon", "Versatile Nature of Carbon", "Homologous Series", "Soaps and Detergents"] },
+            { name: "Mathematics", chapters: [
+                { name: "Real Numbers", topics: ["Euclid's Division Lemma", "The Fundamental Theorem of Arithmetic", "Revisiting Rational and Irrational Numbers"] },
+                { name: "Trigonometry", topics: ["Trigonometric Ratios", "Trigonometric Identities", "Heights and Distances"] },
+                { name: "Statistics", topics: ["Mean of Grouped Data", "Mode and Median of Grouped Data", "Ogive"] }
             ]},
-            { name: "Biology", chapters: [
-                { name: "Life Processes", topics: ["Nutrition", "Respiration", "Transportation", "Excretion"] },
-                { name: "How do Organisms Reproduce?", topics: ["Asexual and Sexual Reproduction", "Reproduction in Human Beings", "Reproductive Health"] },
-                { name: "Heredity and Evolution", topics: ["Mendel's Contributions", "How are Traits Expressed", "Speciation"] },
+            { name: "Science", chapters: [
+                { name: "Physics: Light - Reflection and Refraction", topics: ["Reflection by Spherical Mirrors", "Refraction of Light", "Refraction by Spherical Lenses", "Power of a Lens"] },
+                { name: "Chemistry: Carbon and its Compounds", topics: ["Covalent Bonding in Carbon", "Versatile Nature of Carbon", "Homologous Series", "Soaps and Detergents"] },
+                { name: "Biology: Life Processes", topics: ["Nutrition", "Respiration", "Transportation", "Excretion"] },
             ]},
-             { name: "History", chapters: [
-                { name: "Nationalism in India", topics: ["The Non-Cooperation Movement", "The Civil Disobedience Movement", "The Quit India Movement"] },
-                { name: "The Making of a Global World", topics: ["The Silk Routes", "The Great Depression", "Post-War Era"] },
+            { name: "Social Science", chapters: [
+                { name: "History: Nationalism in India", topics: ["The Non-Cooperation Movement", "The Civil Disobedience Movement", "The Sense of Collective Belonging"] },
+                { name: "Geography: Resources and Development", topics: ["Types of Resources", "Land Resources", "Soil as a Resource"] },
+                { name: "Political Science: Power Sharing", topics: ["Case studies of Belgium and Sri Lanka", "Why power sharing is desirable?", "Forms of Power Sharing"] },
+                { name: "Economics: Sectors of the Indian Economy", topics: ["Primary, Secondary and Tertiary Sectors", "Organized and Unorganized Sectors", "Public and Private Sectors"] },
             ]}
         ]
     },
     {
         grade: "Grade 11",
         subjects: [
+            { name: "English", chapters: [
+                { name: "The Portrait of a Lady", topics: ["Character Sketch", "Themes", "Narrative Style"] },
+                { name: "A Photograph (Poem)", topics: ["Imagery", "Symbolism", "Poetic Devices"] }
+            ]},
             { name: "Physics", chapters: [
                 { name: "Kinematics", topics: ["Vectors", "Projectile Motion", "Relative Velocity"] },
                 { name: "Laws of Motion", topics: ["Newton's Laws", "Friction", "Circular Motion"] },
@@ -250,12 +277,41 @@ const curriculumData = [
                 { name: "The Living World", topics: ["Taxonomy and Systematics", "Five Kingdom Classification"] },
                 { name: "Cell: The Unit of Life", topics: ["Detailed Cell Structure", "The Cell Cycle", "Meiosis and Mitosis"] },
                 { name: "Human Physiology", topics: ["Digestion and Absorption", "Breathing and Exchange of Gases", "Body Fluids and Circulation"] },
-            ]}
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Sets and Functions", topics: ["Sets", "Relations & Functions", "Trigonometric Functions"] },
+                { name: "Algebra", topics: ["Principle of Mathematical Induction", "Complex Numbers and Quadratic Equations", "Binomial Theorem"] },
+                { name: "Calculus", topics: ["Limits and Derivatives"] }
+            ]},
+            { name: "Accountancy", chapters: [
+                { name: "Introduction to Accounting", topics: ["Meaning and Objectives of Accounting", "Basic Accounting Terms", "Accounting Principles"] },
+                { name: "Recording of Transactions", topics: ["Journal", "Ledger", "Trial Balance"] }
+            ]},
+            { name: "Business Studies", chapters: [
+                { name: "Nature and Purpose of Business", topics: ["Concept and characteristics of business", "Classification of business activities", "Business risk"] },
+                { name: "Forms of Business Organisation", topics: ["Sole Proprietorship", "Partnership", "Company"] }
+            ]},
+            { name: "Economics", chapters: [
+                { name: "Statistics for Economics", topics: ["Collection of data", "Organisation of data", "Presentation of data"] },
+                { name: "Indian Economic Development", topics: ["Indian Economy on the Eve of Independence", "Economic Reforms since 1991"] }
+            ]},
+            { name: "History", chapters: [
+                { name: "Early Societies", topics: ["From the Beginning of Time", "Writing and City Life (Mesopotamia)"] },
+                { name: "Empires", topics: ["An Empire Across Three Continents (Roman Empire)", "The Central Islamic Lands"] }
+            ]},
+            { name: "Political Science", chapters: [
+                { name: "Constitution: Why and How?", topics: ["The making of the Constitution", "The Constituent Assembly", "Philosophy of the Constitution"] },
+                { name: "Rights in the Indian Constitution", topics: ["The importance of rights", "Fundamental Rights", "Directive Principles of State Policy"] }
+            ]},
         ]
     },
     {
         grade: "Grade 12",
         subjects: [
+             { name: "English", chapters: [
+                { name: "The Last Lesson", topics: ["Themes of patriotism and linguistic chauvinism", "Character analysis"] },
+                { name: "My Mother at Sixty-Six (Poem)", topics: ["Aging and filial duty", "Poetic devices"] }
+            ]},
             { name: "Physics", chapters: [
                 { name: "Electrostatics", topics: ["Electric Charges and Fields", "Gauss's Law", "Capacitance"] },
                 { name: "Current Electricity", topics: ["Kirchhoff's Laws", "Potentiometer", "Wheatstone Bridge"] },
@@ -270,6 +326,31 @@ const curriculumData = [
                 { name: "Reproduction", topics: ["Reproduction in Organisms", "Human Reproduction", "Reproductive Health"] },
                 { name: "Genetics and Evolution", topics: ["Principles of Inheritance", "Molecular Basis of Inheritance", "Evolution"] },
                 { name: "Biotechnology", topics: ["Principles and Processes", "Applications of Biotechnology", "Genetically Modified Organisms"] },
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Relations and Functions", topics: ["Types of relations and functions", "Inverse Trigonometric Functions"] },
+                { name: "Matrices and Determinants", topics: ["Operations on matrices", "Properties of determinants", "Solving system of linear equations"] },
+                { name: "Calculus", topics: ["Continuity and Differentiability", "Applications of Derivatives", "Integrals", "Differential Equations"] }
+            ]},
+            { name: "Accountancy", chapters: [
+                { name: "Accounting for Partnership Firms", topics: ["Fundamentals", "Goodwill", "Reconstitution and Dissolution"] },
+                { name: "Company Accounts and Financial Statement Analysis", topics: ["Accounting for Share Capital", "Financial Statements of a Company", "Cash Flow Statement"] }
+            ]},
+            { name: "Business Studies", chapters: [
+                { name: "Principles and Functions of Management", topics: ["Nature and Significance of Management", "Planning", "Organising", "Staffing", "Directing", "Controlling"] },
+                { name: "Marketing Management", topics: ["Marketing Mix (4 Ps)", "Branding", "Packaging and Labeling"] }
+            ]},
+            { name: "Economics", chapters: [
+                { name: "Introductory Macroeconomics", topics: ["National Income and Related Aggregates", "Money and Banking", "Balance of Payments"] },
+                { name: "Indian Economic Development", topics: ["Employment", "Infrastructure", "Sustainable Economic Development"] }
+            ]},
+            { name: "History", chapters: [
+                { name: "Bricks, Beads and Bones (The Harappan Civilisation)", topics: ["Early urban centres", "Craft Production", "Decline of the civilisation"] },
+                { name: "Mahatma Gandhi and the Nationalist Movement", topics: ["Civil Disobedience", "Quit India Movement", "Role of Gandhi"] }
+            ]},
+            { name: "Political Science", chapters: [
+                { name: "The Cold War Era", topics: ["Emergence of two power blocs", "Non-Aligned Movement (NAM)"] },
+                { name: "Politics in India Since Independence", topics: ["Challenges of Nation Building", "Era of One-Party Dominance", "The Emergency"] }
             ]}
         ]
     },
