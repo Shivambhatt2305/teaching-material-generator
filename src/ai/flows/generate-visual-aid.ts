@@ -33,7 +33,7 @@ const generateVisualAidFlow = ai.defineFlow(
   async input => {
     const { media } = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: `Generate a clear, simple, educational visual aid, diagram, or illustration for the following concept. The image should be visually appealing and suitable for a presentation. Text: "${input.text}"`,
+      prompt: `Generate a clear, simple, educational visual aid, diagram, or illustration for the following concept. The image should be visually appealing and suitable for a presentation slide. Avoid using too much text in the image itself. The style should be clean and professional. Concept: "${input.text}"`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },

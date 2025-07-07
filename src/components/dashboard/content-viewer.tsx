@@ -322,7 +322,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
             <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 slide-visuals">
               {slide.visuals.map((src, i) => (
                 <div key={i} className="relative aspect-video w-full overflow-hidden rounded-lg border visual-wrapper">
-                  <Image src={src} alt={`Generated visual ${i + 1}`} fill objectFit="cover" />
+                  <Image src={src} alt={`Generated visual ${i + 1}`} fill objectFit="contain" />
                 </div>
               ))}
             </div>

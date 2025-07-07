@@ -9,8 +9,8 @@ export default function LoginPage() {
           <BookOpenCheck className="h-10 w-10" />
           <h1 className="text-4xl font-bold font-headline">TeachMate AI</h1>
         </div>
-        <p className="text-center text-muted-foreground">
-          Generate engaging teaching materials, lesson plans, and visual aids in seconds.
+        <p className="text-center text-muted-foreground max-w-sm">
+          Your AI-powered assistant for creating high-quality, engaging teaching materials. Generate full presentations, lesson plans, and stunning visual aids in minutes, not hours.
         </p>
         <LoginForm />
       </div>

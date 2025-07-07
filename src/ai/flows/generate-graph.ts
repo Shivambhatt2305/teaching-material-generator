@@ -33,7 +33,7 @@ const generateGraphFlow = ai.defineFlow(
   async input => {
     const { media } = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: `Generate a clear and simple graph, chart, or data visualization that explains the following concept. The image should be suitable for a presentation slide. Avoid using too much text in the image itself. Concept: "${input.text}"`,
+      prompt: `Generate a clear and simple graph, chart, or data visualization that visually explains the following concept. The image should be professional, easy to understand, and suitable for a presentation slide. It should not contain much text, focusing on the visual representation of data or a process. Concept: "${input.text}"`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },

@@ -50,15 +50,15 @@ const generateTeachingContentPrompt = ai.definePrompt({
   name: 'generateTeachingContentPrompt',
   input: {schema: GenerateTeachingContentInputSchema},
   output: {schema: GenerateTeachingContentOutputSchema},
-  prompt: `You are an expert curriculum designer creating a presentation in the language '{{{language}}}'.
+  prompt: `You are an expert instructional designer tasked with creating engaging and accurate teaching materials. Your output must be in the language '{{{language}}}'.
 
-Generate the content for the following:
-Grade Level: {{{grade}}}
-Subject: {{{subject}}}
-Chapter: {{{chapter}}}
-Depth Level: {{{depthLevel}}}
+Please generate a presentation based on these precise parameters:
+- Grade Level: {{{grade}}}
+- Subject: {{{subject}}}
+- Chapter: {{{chapter}}}
+- Content Depth: {{{depthLevel}}}
 
-Your task is to create a series of presentation slides covering the following topics:
+The presentation must cover the following specific topics. Do not introduce topics not on this list:
 {{#each topics}}
 - {{{this}}}
 {{/each}}
@@ -66,13 +66,11 @@ Your task is to create a series of presentation slides covering the following to
 - {{{customTopic}}}
 {{/if}}
 
-IMPORTANT: You must generate the entire response in the requested language: **{{{language}}}**.
+Adhere strictly to the following formatting guidelines for each slide:
+1.  **Content:** Use clear, concise Markdown. Every slide must start with a title (e.g., '## Title'). Use bullet points (-) for key information. Emphasize important terms using bold formatting (e.g., **Key Term**). The tone and complexity must be appropriate for the specified grade level.
+2.  **Visual Aid Suggestion:** For each slide, provide a highly relevant, 5-10 word prompt for an AI image generator. This prompt must describe an educational diagram, simple illustration, or chart that visually explains the slide's core concept. The suggestion must also be in '{{{language}}}'.
 
-For each slide, provide two things:
-1.  The slide's content, formatted in Markdown. Each slide must have a title starting with '## ' and bullet points (-) for the main content. Use bold text (**key term**) for emphasis.
-2.  A concise, 5-10 word suggestion for a visual aid that would accompany the slide. This suggestion will be used as a prompt for an AI image generator. The suggestion must also be in the requested language: **{{{language}}}**.
-
-Structure your entire response as a JSON object that matches the output schema. Do not include any text before or after the JSON.`,
+Your entire response MUST be a single, valid JSON object that conforms to the output schema. Do not include any explanatory text, markdown formatting ticks, or anything else outside of the JSON structure.`,
 });
 
 const generateTeachingContentFlow = ai.defineFlow(

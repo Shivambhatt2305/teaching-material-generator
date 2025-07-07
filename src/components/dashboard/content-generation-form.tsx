@@ -25,11 +25,12 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Lightbulb } from 'lucide-react';
 
 import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
 import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
 import { generateGraph } from '@/ai/flows/generate-graph';
+import { suggestTopics } from '@/ai/flows/suggest-topics';
 import { ContentViewer, type Slide } from './content-viewer';
 
 const curriculumData = [
@@ -185,12 +186,13 @@ type CurriculumItem = { name: string; chapters?: any[]; topics?: string[] };
 
 export function ContentGenerationForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const [slides, setSlides] = useState<Slide[]>([]);
   const { toast } = useToast();
 
   const [subjects, setSubjects] = useState<CurriculumItem[]>([]);
   const [chapters, setChapters] = useState<CurriculumItem[]>([]);
-  const [topics, setTopics] = useState<string[]>([]);
+  const [availableTopics, setAvailableTopics] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -215,7 +217,7 @@ export function ContentGenerationForm() {
     const selectedGrade = curriculumData.find(g => g.grade === grade);
     setSubjects(selectedGrade?.subjects || []);
     setChapters([]);
-    setTopics([]);
+    setAvailableTopics([]);
   }, [grade, form]);
 
   useEffect(() => {
@@ -223,13 +225,13 @@ export function ContentGenerationForm() {
     form.resetField("topics", { defaultValue: [] });
     const selectedSubject = subjects.find(s => s.name === subject);
     setChapters(selectedSubject?.chapters || []);
-    setTopics([]);
+    setAvailableTopics([]);
   }, [subject, subjects, form]);
 
   useEffect(() => {
     form.resetField("topics", { defaultValue: [] });
     const selectedChapter = chapters.find(c => c.name === chapter);
-    setTopics(selectedChapter?.topics || []);
+    setAvailableTopics(selectedChapter?.topics || []);
   }, [chapter, chapters, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -295,6 +297,29 @@ export function ContentGenerationForm() {
         title: 'Failed to generate graph.',
         description: 'There was a problem with the image generation model. Please try again.',
       });
+    }
+  };
+
+  const handleTopicSuggest = async () => {
+    if (!subject || !chapter) return;
+    setIsSuggesting(true);
+    try {
+      const result = await suggestTopics({ subject, mainTopic: chapter });
+      const newTopics = result.suggestedTopics.filter(t => !availableTopics.includes(t));
+      setAvailableTopics(prev => [...prev, ...newTopics]);
+      toast({
+          title: 'New topics suggested!',
+          description: 'We\'ve added a few more topic ideas to the list for you.',
+      });
+    } catch (error) {
+        console.error("Failed to suggest topics", error);
+        toast({
+            variant: 'destructive',
+            title: 'Failed to suggest topics.',
+            description: 'There was a problem with the AI model. Please try again.',
+        });
+    } finally {
+        setIsSuggesting(false);
     }
   };
 
@@ -373,55 +398,61 @@ export function ContentGenerationForm() {
                 )}
                 />
             )}
-            {topics.length > 0 && (
-                <FormField
-                    control={form.control}
-                    name="topics"
-                    render={() => (
-                        <FormItem>
-                        <div className="mb-4">
-                            <FormLabel className="text-base">Topics to Cover</FormLabel>
-                            <FormDescription>
-                                Select the topics you want to include in the presentation.
-                            </FormDescription>
-                        </div>
-                        {topics.map((item) => (
-                            <FormField
-                            key={item}
-                            control={form.control}
-                            name="topics"
-                            render={({ field }) => {
-                                return (
-                                <FormItem
-                                    key={item}
-                                    className="flex flex-row items-start space-x-3 space-y-0"
-                                >
-                                    <FormControl>
-                                    <Checkbox
-                                        checked={field.value?.includes(item)}
-                                        onCheckedChange={(checked) => {
-                                        return checked
-                                            ? field.onChange([...(field.value || []), item])
-                                            : field.onChange(
-                                                field.value?.filter(
-                                                (value) => value !== item
-                                                )
+            {availableTopics.length > 0 && (
+              <FormField
+                control={form.control}
+                name="topics"
+                render={() => (
+                  <FormItem>
+                    <div className="mb-4">
+                      <FormLabel className="text-base">Topics to Cover</FormLabel>
+                      <FormDescription>
+                        Select the topics you want to include in the presentation.
+                      </FormDescription>
+                    </div>
+                    <div className="space-y-3">
+                      {availableTopics.map((item) => (
+                        <FormField
+                          key={item}
+                          control={form.control}
+                          name="topics"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(item)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...(field.value || []), item])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              (value) => value !== item
                                             )
-                                        }}
-                                    />
-                                    </FormControl>
-                                    <FormLabel className="font-normal">
-                                    {item}
-                                    </FormLabel>
-                                </FormItem>
-                                )
-                            }}
-                            />
-                        ))}
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">{item}</FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <FormMessage className="pt-2" />
+                    <div className="mt-4">
+                        <Button type="button" variant="outline" size="sm" onClick={handleTopicSuggest} disabled={isSuggesting || !chapter}>
+                            {isSuggesting ? <Loader2 className="animate-spin" /> : <Lightbulb />}
+                            Suggest More Topics
+                        </Button>
+                    </div>
+                  </FormItem>
+                )}
+              />
             )}
             
             <FormField

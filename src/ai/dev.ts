@@ -4,3 +4,4 @@ config();
 import '@/ai/flows/generate-teaching-content.ts';
 import '@/ai/flows/generate-visual-aid.ts';
 import '@/ai/flows/generate-graph.ts';
+import '@/ai/flows/suggest-topics.ts';
