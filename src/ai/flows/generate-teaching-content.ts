@@ -17,7 +17,8 @@ const GenerateTeachingContentInputSchema = z.object({
   depthLevel: z
     .string()
     .describe(
-      'The depth level of the teaching content (e.g., introductory, intermediate, advanced).'n    ),
+      'The depth level of the teaching content (e.g., introductory, intermediate, advanced).'
+    ),
 });
 export type GenerateTeachingContentInput = z.infer<
   typeof GenerateTeachingContentInputSchema
