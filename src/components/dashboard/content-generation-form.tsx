@@ -35,109 +35,242 @@ import { ContentViewer, type Slide } from './content-viewer';
 
 const curriculumData = [
     {
-        grade: "Elementary School (Grades 1-3)",
+        grade: "Grade 1",
         subjects: [
-            {
-                name: "Math",
-                chapters: [
-                    { name: "Basic Counting", topics: ["Counting to 20", "Counting by Tens", "Number Recognition"] },
-                    { name: "Simple Addition", topics: ["Adding numbers up to 10", "Addition Word Problems", "Making 10"] },
-                ]
-            },
-            {
-                name: "Science",
-                chapters: [
-                    { name: "Living Things", topics: ["Plants and Animals", "What Living Things Need", "Habitats"] },
-                    { name: "Weather", topics: ["Sunny, Rainy, Windy", "The Four Seasons", "Observing Weather"] },
-                ]
-            }
+            { name: "English", chapters: [
+                { name: "The Alphabet", topics: ["Recognizing Letters (A-Z)", "Vowels and Consonants", "Alphabetical Order"] },
+                { name: "Basic Words", topics: ["Three-Letter Words", "Sight Words", "Picture-Word Association"] },
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Numbers 1-50", topics: ["Counting Forward and Backward", "Number Names", "Comparing Numbers (More/Less)"] },
+                { name: "Simple Addition", topics: ["Adding Single-Digit Numbers", "Addition with Pictures", "Zero in Addition"] },
+            ]},
+            { name: "Environmental Science", chapters: [
+                { name: "My Body", topics: ["Parts of the Body", "Sense Organs", "Keeping Clean"] },
+                { name: "Plants Around Us", topics: ["Types of Plants", "Parts of a Plant", "What Plants Need"] },
+            ]}
         ]
     },
     {
-        grade: "Elementary School (Grades 4-6)",
+        grade: "Grade 2",
         subjects: [
-            {
-                name: "Math",
-                chapters: [
-                    { name: "Multiplication and Division", topics: ["Multiplication Facts", "Long Division", "Word Problems"] },
-                    { name: "Fractions", topics: ["What is a Fraction?", "Equivalent Fractions", "Adding and Subtracting Fractions"] },
-                ]
-            },
-            {
-                name: "Science",
-                chapters: [
-                    { name: "The Solar System", topics: ["The Sun and Planets", "The Moon Phases", "Earth's Rotation"] },
-                    { name: "Simple Machines", topics: ["Levers and Pulleys", "Wheels and Axles", "Inclined Planes"] },
-                ]
-            },
-            {
-                name: "Social Studies",
-                chapters: [
-                    { name: "Local Government", topics: ["Mayor and City Council", "Community Services", "How Laws are Made"] },
-                    { name: "Map Skills", topics: ["Using a Compass Rose", "Reading a Map Key", "Latitude and Longitude"] },
-                ]
-            }
+            { name: "English", chapters: [
+                { name: "Nouns and Verbs", topics: ["Identifying Naming Words (Nouns)", "Identifying Action Words (Verbs)", "Singular and Plural Nouns"] },
+                { name: "Sentence Building", topics: ["Making Simple Sentences", "Using Capital Letters and Full Stops", "Answering Simple Questions"] },
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Numbers up to 100", topics: ["Place Value (Tens and Ones)", "Expanded Form", "Skip Counting (2s, 5s, 10s)"] },
+                { name: "Simple Subtraction", topics: ["Subtracting Single-Digit Numbers", "Subtraction with Pictures", "Zero in Subtraction"] },
+            ]},
+            { name: "Environmental Science", chapters: [
+                { name: "Animals Around Us", topics: ["Wild and Domestic Animals", "Animal Homes and Sounds", "What Animals Eat"] },
+                { name: "Water", topics: ["Sources of Water", "Uses of Water", "Saving Water"] },
+            ]}
         ]
     },
     {
-        grade: "Middle School (Grades 7-9)",
+        grade: "Grade 3",
         subjects: [
-            {
-                name: "Science",
-                chapters: [
-                    { name: "Cells", topics: ["Introduction to Cells", "Plant vs. Animal Cells", "The Microscope", "Cell Organelles"] },
-                    { name: "Ecosystems", topics: ["What is an Ecosystem?", "Food Chains and Webs", "Producers, Consumers, Decomposers", "Biotic and Abiotic Factors"] },
-                    { name: "Chemistry Basics", topics: ["Atoms and Molecules", "The Periodic Table", "Chemical Reactions"] },
-                ]
-            },
-            {
-                name: "History",
-                chapters: [
-                    { name: "Ancient Rome", topics: ["The Founding of Rome", "The Roman Republic", "The Roman Empire", "Fall of Rome"] },
-                    { name: "The Middle Ages", topics: ["Feudalism", "The Crusades", "The Black Death"] },
-                ]
-            },
-            {
-                name: "English",
-                chapters: [
-                    { name: "Grammar", topics: ["Parts of Speech", "Sentence Structure", "Punctuation"] },
-                    { name: "Literature", topics: ["Analyzing a Novel", "Poetry and Figurative Language", "Writing a Book Report"] },
-                ]
-            }
+            { name: "English", chapters: [
+                { name: "Pronouns and Adjectives", topics: ["Using He, She, It, They", "Describing Words (Adjectives)", "Articles (A, An, The)"] },
+                { name: "Reading Comprehension", topics: ["Reading a Short Story", "Answering Questions from a Passage", "Finding the Main Idea"] },
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Introduction to Multiplication", topics: ["Multiplication as Repeated Addition", "Multiplication Tables (2, 3, 4, 5, 10)", "Simple Multiplication Problems"] },
+                { name: "Time and Money", topics: ["Reading a Clock (O'Clock, Half Past)", "Days of the Week, Months of the Year", "Indian Currency (Notes and Coins)"] },
+            ]},
+            { name: "Science", chapters: [
+                { name: "Living and Non-Living Things", topics: ["Characteristics of Living Things", "Natural and Man-Made Things", "Differences between Plants and Animals"] },
+                { name: "Our Universe", topics: ["The Sun, Moon, and Stars", "The Earth is a Planet", "Day and Night"] },
+            ]},
+            { name: "Social Studies", chapters: [
+                { name: "My Family and Neighborhood", topics: ["Types of Families", "People in My Neighborhood", "Places in a Neighborhood"] },
+                { name: "Festivals We Celebrate", topics: ["National Festivals", "Religious Festivals", "Harvest Festivals"] },
+            ]}
         ]
     },
     {
-        grade: "High School (Grades 10-12)",
+        grade: "Grade 4",
         subjects: [
-            {
-                name: "Biology",
-                chapters: [
-                    { name: "Photosynthesis", topics: ["Light-Dependent Reactions", "The Calvin Cycle", "Factors Affecting Photosynthesis", "Chloroplast Structure"] },
-                    { name: "Genetics", topics: ["Mendelian Genetics", "DNA Structure and Replication", "Gene Expression", "Mutations"] },
-                    { name: "Evolution", topics: ["Natural Selection", "Evidence for Evolution", "Speciation"] },
-                ]
-            },
-            {
-                name: "Chemistry",
-                chapters: [
-                    { name: "Atomic Structure", topics: ["Protons, Neutrons, Electrons", "Isotopes and Ions", "Electron Configurations", "The Periodic Table"] },
-                    { name: "Stoichiometry", topics: ["The Mole Concept", "Balancing Equations", "Limiting Reactants"] },
-                ]
-            },
-            {
-                name: "Physics",
-                chapters: [
-                    { name: "Kinematics", topics: ["Velocity and Acceleration", "Projectile Motion", "Newton's Laws of Motion"] },
-                    { name: "Electricity", topics: ["Ohm's Law", "Series and Parallel Circuits", "Magnetism"] },
-                ]
-            },
-            {
-                name: "World History",
-                chapters: [
-                    { name: "World War I", topics: ["Causes of WWI", "Major Battles", "The Treaty of Versailles"] },
-                    { name: "The Cold War", topics: ["The Iron Curtain", "The Space Race", "The Fall of the Soviet Union"] },
-                ]
-            }
+            { name: "English", chapters: [
+                { name: "Tenses", topics: ["Present, Past, and Future Tense", "Simple Continuous Tense", "Correct Usage of Tenses"] },
+                { name: "Creative Writing", topics: ["Paragraph Writing", "Picture Composition", "Writing a Short Story"] },
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Division", topics: ["Division as Equal Sharing", "Long Division Method (Simple)", "Relationship between Multiplication and Division"] },
+                { name: "Fractions", topics: ["Understanding Fractions (Halves, Thirds, Quarters)", "Comparing Fractions", "Equivalent Fractions"] },
+            ]},
+            { name: "Science", chapters: [
+                { name: "Food and Digestion", topics: ["Nutrients in Food", "Balanced Diet", "The Human Digestive System"] },
+                { name: "Matter", topics: ["Solids, Liquids, and Gases", "Changes of State (Melting, Freezing, Evaporation)", "Properties of Matter"] },
+            ]},
+            { name: "Social Studies", chapters: [
+                { name: "Our Country - India", topics: ["Location and Neighbors", "States and Union Territories", "Physical Divisions of India"] },
+                { name: "Our Government", topics: ["Local Self-Government (Panchayat, Municipality)", "The Central Government", "The State Government"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 5",
+        subjects: [
+            { name: "English", chapters: [
+                { name: "Types of Sentences", topics: ["Declarative, Interrogative, Imperative, Exclamatory", "Subject and Predicate", "Complex Sentences"] },
+                { name: "Vocabulary", topics: ["Synonyms and Antonyms", "Homophones", "Idioms and Phrases"] },
+            ]},
+            { name: "Mathematics", chapters: [
+                { name: "Decimals", topics: ["Understanding Decimals", "Place Value in Decimals", "Addition and Subtraction of Decimals"] },
+                { name: "Geometry", topics: ["Angles (Acute, Obtuse, Right)", "Circles (Radius, Diameter, Circumference)", "Area and Perimeter of Squares and Rectangles"] },
+            ]},
+            { name: "Science", chapters: [
+                { name: "The Skeletal System", topics: ["The Human Skeleton", "Joints", "Importance of Bones"] },
+                { name: "Force, Work, and Energy", topics: ["Types of Forces (Gravity, Friction)", "Simple Machines", "Forms of Energy"] },
+            ]},
+            { name: "Social Studies", chapters: [
+                { name: "The Freedom Struggle", topics: ["The Revolt of 1857", "Famous Freedom Fighters", "India's Independence"] },
+                { name: "The United Nations", topics: ["Formation of the UN", "Organs of the UN", "India's Role in the UN"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 6",
+        subjects: [
+            { name: "Science", chapters: [
+                { name: "Food: Where Does It Come From?", topics: ["Food Variety", "Plant and Animal Sources", "What Animals Eat"] },
+                { name: "Components of Food", topics: ["Carbohydrates, Fats, Proteins", "Vitamins and Minerals", "Balanced Diet"] },
+                { name: "Getting to Know Plants", topics: ["Herbs, Shrubs, and Trees", "Parts of a Plant: Root, Stem, Leaf, Flower", "Photosynthesis"] },
+            ]},
+            { name: "History", chapters: [
+                { name: "The Indus Valley Civilization", topics: ["Town Planning", "Seals and Pottery", "Daily Life"] },
+                { name: "The Vedic Period", topics: ["The Four Vedas", "Early and Later Vedic Society", "Political System"] },
+                { name: "The Mauryan Empire", topics: ["Chandragupta Maurya", "Ashoka and his Dhamma", "Mauryan Administration"] },
+            ]},
+            { name: "Geography", chapters: [
+                { name: "The Earth in the Solar System", topics: ["Planets and Stars", "The Moon", "Asteroids and Meteoroids"] },
+                { name: "Motions of the Earth", topics: ["Rotation and Revolution", "Seasons", "Leap Year"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 7",
+        subjects: [
+            { name: "Science", chapters: [
+                { name: "Nutrition in Plants and Animals", topics: ["Autotrophic and Heterotrophic Nutrition", "Human Digestive System", "Nutrition in Ruminants"] },
+                { name: "Acids, Bases, and Salts", topics: ["Indicators", "Neutralization", "Salts"] },
+                { name: "Weather, Climate and Adaptations", topics: ["Elements of Weather", "Climate", "Adaptations of Animals to Climate"] },
+            ]},
+            { name: "History", chapters: [
+                { name: "The Delhi Sultanate", topics: ["The Slave Dynasty", "The Khalji and Tughlaq Dynasties", "Administration and Architecture"] },
+                { name: "The Mughal Empire", topics: ["Babur to Aurangzeb", "Mughal Administration and Art", "Decline of the Empire"] },
+            ]},
+            { name: "Geography", chapters: [
+                { name: "Our Environment", topics: ["Components of Environment", "Ecosystem", "Human Environment"] },
+                { name: "Inside Our Earth", topics: ["Layers of the Earth", "Rocks and Minerals", "The Rock Cycle"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 8",
+        subjects: [
+            { name: "Science", chapters: [
+                { name: "Microorganisms: Friend and Foe", topics: ["Viruses, Bacteria, Fungi", "Useful and Harmful Microorganisms", "Food Preservation"] },
+                { name: "Cell - Structure and Functions", topics: ["Discovery of the Cell", "Parts of a Cell", "Plant vs. Animal Cells"] },
+                { name: "Force and Pressure", topics: ["Force: A Push or a Pull", "Types of Forces", "Pressure"] },
+            ]},
+            { name: "History", chapters: [
+                { name: "From Trade to Territory", topics: ["The East India Company", "The Battle of Plassey", "The Doctrine of Lapse"] },
+                { name: "The Great Uprising of 1857", topics: ["Causes of the Revolt", "Main Centers of the Revolt", "Consequences"] },
+                { name: "India After Independence", topics: ["Partition", "Integration of Princely States", "The Making of the Constitution"] },
+            ]},
+            { name: "Civics", chapters: [
+                { name: "The Indian Constitution", topics: ["Why do we need a Constitution?", "Key Features of the Indian Constitution", "Fundamental Rights and Duties"] },
+                { name: "Understanding Secularism", topics: ["What is Secularism?", "The Indian Model of Secularism", "Importance of Secularism"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 9",
+        subjects: [
+            { name: "Physics", chapters: [
+                { name: "Motion", topics: ["Distance and Displacement", "Velocity and Acceleration", "Equations of Motion", "Uniform Circular Motion"] },
+                { name: "Force and Laws of Motion", topics: ["Newton's First Law", "Newton's Second Law (F=ma)", "Newton's Third Law", "Conservation of Momentum"] },
+                { name: "Work and Energy", topics: ["Work Done by a Force", "Kinetic and Potential Energy", "Law of Conservation of Energy", "Power"] },
+            ]},
+            { name: "Chemistry", chapters: [
+                { name: "Matter in Our Surroundings", topics: ["States of Matter", "Interconversion of States", "Evaporation", "Latent Heat"] },
+                { name: "Is Matter Around Us Pure?", topics: ["Mixtures and Solutions", "Separating Components of a Mixture", "Physical and Chemical Changes"] },
+            ]},
+            { name: "Biology", chapters: [
+                { name: "The Fundamental Unit of Life", topics: ["Cell Theory", "Prokaryotic and Eukaryotic Cells", "Cell Organelles", "Cell Division"] },
+                { name: "Tissues", topics: ["Plant Tissues (Meristematic, Permanent)", "Animal Tissues (Epithelial, Connective, Muscular, Nervous)"] },
+            ]},
+            { name: "History", chapters: [
+                { name: "The French Revolution", topics: ["Causes", "The Reign of Terror", "Rise of Napoleon Bonaparte"] },
+                { name: "Socialism in Europe and the Russian Revolution", topics: ["The 1905 Revolution", "The October Revolution of 1917", "Stalinism"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 10",
+        subjects: [
+            { name: "Physics", chapters: [
+                { name: "Light - Reflection and Refraction", topics: ["Reflection by Spherical Mirrors", "Refraction of Light", "Refraction by Spherical Lenses", "Power of a Lens"] },
+                { name: "Electricity", topics: ["Ohm's Law", "Resistors in Series and Parallel", "Heating Effect of Electric Current", "Electric Power"] },
+                { name: "Magnetic Effects of Electric Current", topics: ["Magnetic Field and Field Lines", "Electromagnetic Induction", "Electric Motor", "Electric Generator"] },
+            ]},
+            { name: "Chemistry", chapters: [
+                { name: "Chemical Reactions and Equations", topics: ["Balancing Chemical Equations", "Types of Chemical Reactions", "Corrosion and Rancidity"] },
+                { name: "Acids, Bases and Salts", topics: ["pH Scale", "Important Acids, Bases, and Salts", "Making of Plaster of Paris"] },
+                { name:_("Carbon and its Compounds"), topics: ["Covalent Bonding in Carbon", "Versatile Nature of Carbon", "Homologous Series", "Soaps and Detergents"] },
+            ]},
+            { name: "Biology", chapters: [
+                { name: "Life Processes", topics: ["Nutrition", "Respiration", "Transportation", "Excretion"] },
+                { name: "How do Organisms Reproduce?", topics: ["Asexual and Sexual Reproduction", "Reproduction in Human Beings", "Reproductive Health"] },
+                { name: "Heredity and Evolution", topics: ["Mendel's Contributions", "How are Traits Expressed", "Speciation"] },
+            ]},
+             { name: "History", chapters: [
+                { name: "Nationalism in India", topics: ["The Non-Cooperation Movement", "The Civil Disobedience Movement", "The Quit India Movement"] },
+                { name: "The Making of a Global World", topics: ["The Silk Routes", "The Great Depression", "Post-War Era"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 11",
+        subjects: [
+            { name: "Physics", chapters: [
+                { name: "Kinematics", topics: ["Vectors", "Projectile Motion", "Relative Velocity"] },
+                { name: "Laws of Motion", topics: ["Newton's Laws", "Friction", "Circular Motion"] },
+                { name: "Thermodynamics", topics: ["Zeroth, First, and Second Laws", "Heat Engines", "Refrigerators"] },
+            ]},
+            { name: "Chemistry", chapters: [
+                { name: "Atomic Structure", topics: ["Quantum Numbers", "Aufbau Principle", "Heisenberg's Uncertainty Principle"] },
+                { name: "Chemical Bonding", topics: ["VSEPR Theory", "Valence Bond Theory", "Molecular Orbital Theory"] },
+                { name: "Equilibrium", topics: ["Chemical Equilibrium", "Ionic Equilibrium", "Le Chatelier's Principle"] },
+            ]},
+            { name: "Biology", chapters: [
+                { name: "The Living World", topics: ["Taxonomy and Systematics", "Five Kingdom Classification"] },
+                { name: "Cell: The Unit of Life", topics: ["Detailed Cell Structure", "The Cell Cycle", "Meiosis and Mitosis"] },
+                { name: "Human Physiology", topics: ["Digestion and Absorption", "Breathing and Exchange of Gases", "Body Fluids and Circulation"] },
+            ]}
+        ]
+    },
+    {
+        grade: "Grade 12",
+        subjects: [
+            { name: "Physics", chapters: [
+                { name: "Electrostatics", topics: ["Electric Charges and Fields", "Gauss's Law", "Capacitance"] },
+                { name: "Current Electricity", topics: ["Kirchhoff's Laws", "Potentiometer", "Wheatstone Bridge"] },
+                { name: "Optics", topics: ["Huygens Principle", "Interference", "Diffraction", "Polarisation"] },
+            ]},
+            { name: "Chemistry", chapters: [
+                { name: "Solutions", topics: ["Colligative Properties", "Raoult's Law", "van't Hoff Factor"] },
+                { name: "Electrochemistry", topics: ["Nernst Equation", "Electrolytic Cells", "Batteries and Corrosion"] },
+                { name: "d and f Block Elements", topics: ["General Properties", "Lanthanoid Contraction", "Potassium Permanganate"] },
+            ]},
+            { name: "Biology", chapters: [
+                { name: "Reproduction", topics: ["Reproduction in Organisms", "Human Reproduction", "Reproductive Health"] },
+                { name: "Genetics and Evolution", topics: ["Principles of Inheritance", "Molecular Basis of Inheritance", "Evolution"] },
+                { name: "Biotechnology", topics: ["Principles and Processes", "Applications of Biotechnology", "Genetically Modified Organisms"] },
+            ]}
         ]
     },
     {
@@ -562,3 +695,5 @@ export function ContentGenerationForm() {
     </div>
   );
 }
+
+    
