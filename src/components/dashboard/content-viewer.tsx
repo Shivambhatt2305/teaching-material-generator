@@ -5,18 +5,25 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Download, ImageIcon, BarChart3, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import Image from 'next/image';
 
-interface ContentViewerProps {
+export interface Slide {
+  id: number;
   content: string;
-  isLoading: boolean;
-  onGenerateVisual: (text: string) => Promise<void>;
-  onGenerateGraph: (text: string) => Promise<void>;
+  visuals: string[];
 }
 
-export function ContentViewer({ content, isLoading, onGenerateVisual, onGenerateGraph }: ContentViewerProps) {
+interface ContentViewerProps {
+  slides: Slide[];
+  isLoading: boolean;
+  onGenerateVisual: (text: string, slideIndex: number) => Promise<void>;
+  onGenerateGraph: (text: string, slideIndex: number) => Promise<void>;
+}
+
+export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateGraph }: ContentViewerProps) {
   const [selectedText, setSelectedText] = useState('');
-  const [isGeneratingVisual, setIsGeneratingVisual] = useState(false);
-  const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
+  const [selectedSlideIndex, setSelectedSlideIndex] = useState<number | null>(null);
+  const [generatingForSlide, setGeneratingForSlide] = useState<number | null>(null);
 
   const handlePrint = () => {
     const contentElement = document.getElementById('content-to-print');
@@ -24,7 +31,7 @@ export function ContentViewer({ content, isLoading, onGenerateVisual, onGenerate
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write('<html><head><title>TeachMate AI Material</title>');
-      printWindow.document.write('<style>body { font-family: "PT Sans", sans-serif; line-height: 1.6; } h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; } ul { padding-left: 20px; } li { margin-bottom: 0.5em; } .slide { border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem; } @media print { .no-print { display: none; } .slide { border: none; padding: 0; margin-bottom: 1.5rem; page-break-after: always; } } </style>');
+      printWindow.document.write('<style>body { font-family: "PT Sans", sans-serif; line-height: 1.6; } h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; } ul { padding-left: 20px; } li { margin-bottom: 0.5em; } .slide { border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem; } .slide-visuals { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; } .visual-wrapper { position: relative; width: 100%; padding-top: 56.25%; } .visual-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } @media print { .no-print { display: none; } .slide { border: none; padding: 0; margin-bottom: 1.5rem; page-break-after: always; } .slide-visuals { break-inside: avoid; } }</style>');
       printWindow.document.write('</head><body>');
       printWindow.document.write(contentElement.innerHTML);
       printWindow.document.write('</body></html>');
@@ -34,28 +41,43 @@ export function ContentViewer({ content, isLoading, onGenerateVisual, onGenerate
   };
 
   const handleSelection = () => {
-    const text = window.getSelection()?.toString().trim();
+    const selection = window.getSelection();
+    const text = selection?.toString().trim();
     if (text && text.length > 10 && text.length < 500) {
-      setSelectedText(text);
+      let node = selection?.anchorNode;
+      if (node) {
+        let parentElement = node.nodeType === 3 ? node.parentElement : node as HTMLElement;
+        while (parentElement) {
+          if (parentElement.dataset.slideIndex) {
+            setSelectedSlideIndex(parseInt(parentElement.dataset.slideIndex, 10));
+            setSelectedText(text);
+            return;
+          }
+          parentElement = parentElement.parentElement;
+        }
+      }
     } else {
-      setSelectedText('');
+        setSelectedText('');
+        setSelectedSlideIndex(null);
     }
   };
 
   const handleGenerateVisualClick = async () => {
-    if (!selectedText) return;
-    setIsGeneratingVisual(true);
-    await onGenerateVisual(selectedText);
+    if (!selectedText || selectedSlideIndex === null) return;
+    setGeneratingForSlide(selectedSlideIndex);
+    await onGenerateVisual(selectedText, selectedSlideIndex);
     setSelectedText('');
-    setIsGeneratingVisual(false);
+    setSelectedSlideIndex(null);
+    setGeneratingForSlide(null);
   };
   
   const handleGenerateGraphClick = async () => {
-    if (!selectedText) return;
-    setIsGeneratingGraph(true);
-    await onGenerateGraph(selectedText);
+    if (!selectedText || selectedSlideIndex === null) return;
+    setGeneratingForSlide(selectedSlideIndex);
+    await onGenerateGraph(selectedText, selectedSlideIndex);
     setSelectedText('');
-    setIsGeneratingGraph(false);
+    setSelectedSlideIndex(null);
+    setGeneratingForSlide(null);
   };
 
   const renderSlideContent = (slideContent: string) => {
@@ -97,13 +119,28 @@ export function ContentViewer({ content, isLoading, onGenerateVisual, onGenerate
     });
   };
 
-  const renderFormattedContent = (text: string) => {
-    if (!text) return null;
-    const slides = text.split('---SLIDE---');
+  const renderFormattedContent = () => {
     return slides.map((slide, slideIndex) => (
-      <Card key={slideIndex} className="slide mb-6 shadow-md">
+      <Card key={slide.id} data-slide-index={slideIndex} className="slide mb-6 shadow-md">
         <CardContent className="p-6">
-          {renderSlideContent(slide.trim())}
+          <div className="prose dark:prose-invert max-w-none">
+            {renderSlideContent(slide.content)}
+          </div>
+          {slide.visuals.length > 0 && (
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 slide-visuals">
+              {slide.visuals.map((src, i) => (
+                <div key={i} className="relative aspect-video w-full overflow-hidden rounded-lg border visual-wrapper">
+                  <Image src={src} alt={`Generated visual ${i + 1}`} layout="fill" objectFit="cover" />
+                </div>
+              ))}
+            </div>
+          )}
+          {generatingForSlide === slideIndex && (
+            <div className="mt-4 flex items-center justify-center text-muted-foreground">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <span>Generating visual... Please wait.</span>
+            </div>
+          )}
         </CardContent>
       </Card>
     ));
@@ -117,17 +154,17 @@ export function ContentViewer({ content, isLoading, onGenerateVisual, onGenerate
         <div className="flex gap-2 flex-wrap no-print">
           {selectedText && (
             <>
-              <Button size="sm" onClick={handleGenerateVisualClick} disabled={isGeneratingVisual || isGeneratingGraph} className="bg-primary hover:bg-primary/90">
-                {isGeneratingVisual ? <Loader2 className="animate-spin" /> : <ImageIcon />}
+              <Button size="sm" onClick={handleGenerateVisualClick} disabled={generatingForSlide !== null} className="bg-primary hover:bg-primary/90">
+                {generatingForSlide !== null && selectedSlideIndex === generatingForSlide ? <Loader2 className="animate-spin" /> : <ImageIcon />}
                 Create Visual
               </Button>
-              <Button size="sm" onClick={handleGenerateGraphClick} disabled={isGeneratingGraph || isGeneratingVisual} className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                {isGeneratingGraph ? <Loader2 className="animate-spin" /> : <BarChart3 />}
+              <Button size="sm" onClick={handleGenerateGraphClick} disabled={generatingForSlide !== null} className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                 {generatingForSlide !== null && selectedSlideIndex === generatingForSlide ? <Loader2 className="animate-spin" /> : <BarChart3 />}
                 Create Graph
               </Button>
             </>
           )}
-          <Button variant="outline" size="sm" onClick={handlePrint} disabled={!content || isLoading}>
+          <Button variant="outline" size="sm" onClick={handlePrint} disabled={slides.length === 0 || isLoading}>
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
@@ -144,9 +181,9 @@ export function ContentViewer({ content, isLoading, onGenerateVisual, onGenerate
             <Skeleton className="h-4 w-[90%]" />
             <Skeleton className="h-4 w-[85%]" />
           </div>
-        ) : content ? (
-            <div id="content-to-print" className="prose dark:prose-invert max-w-none">
-              {renderFormattedContent(content)}
+        ) : slides.length > 0 ? (
+            <div id="content-to-print">
+              {renderFormattedContent()}
             </div>
         ) : (
           <div className="flex h-[400px] flex-col items-center justify-center rounded-md border border-dashed text-center text-muted-foreground">

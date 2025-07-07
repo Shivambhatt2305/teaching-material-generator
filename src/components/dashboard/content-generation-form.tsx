@@ -28,8 +28,7 @@ import { suggestTopics, SuggestTopicsOutput } from '@/ai/flows/suggest-topics';
 import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
 import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
 import { generateGraph } from '@/ai/flows/generate-graph';
-import { ContentViewer } from './content-viewer';
-import { VisualAidsPanel } from './visual-aids-panel';
+import { ContentViewer, Slide } from './content-viewer';
 
 const formSchema = z.object({
   subject: z.string().min(2, { message: 'Subject must be at least 2 characters.' }),
@@ -42,12 +41,9 @@ const formSchema = z.object({
 export function ContentGenerationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuggestionsLoading, setSuggestionsLoading] = useState(false);
-  const [isVisualAidLoading, setVisualAidLoading] = useState(false);
-  const [isGraphLoading, setGraphLoading] = useState(false);
 
-  const [generatedContent, setGeneratedContent] = useState('');
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [topicSuggestions, setTopicSuggestions] = useState<string[]>([]);
-  const [visualAids, setVisualAids] = useState<string[]>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -88,11 +84,18 @@ export function ContentGenerationForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    setGeneratedContent('');
-    setVisualAids([]); // Clear previous visuals
+    setSlides([]);
     try {
       const result = await generateTeachingContent(values);
-      setGeneratedContent(result.teachingContent);
+      const slideContents = result.teachingContent.split('---SLIDE---');
+      const newSlides = slideContents
+        .map((content, index) => ({
+          id: index,
+          content: content.trim(),
+          visuals: [],
+        }))
+        .filter(slide => slide.content);
+      setSlides(newSlides);
     } catch (error) {
       console.error(error);
       toast({
@@ -105,11 +108,16 @@ export function ContentGenerationForm() {
     }
   }
 
-  const handleGenerateVisualAid = async (text: string) => {
-    setVisualAidLoading(true);
+  const handleGenerateVisualAid = async (text: string, slideIndex: number) => {
     try {
       const result = await generateVisualAid({ text });
-      setVisualAids(prev => [...prev, result.imageDataUri]);
+      setSlides(prev => 
+        prev.map((slide, index) => 
+          index === slideIndex 
+            ? { ...slide, visuals: [...slide.visuals, result.imageDataUri] } 
+            : slide
+        )
+      );
     } catch (error) {
       console.error(error);
       toast({
@@ -117,16 +125,19 @@ export function ContentGenerationForm() {
         title: 'Failed to generate visual.',
         description: 'There was a problem with the image generation model. Please try again.',
       });
-    } finally {
-      setVisualAidLoading(false);
     }
   };
   
-  const handleGenerateGraph = async (text: string) => {
-    setGraphLoading(true);
+  const handleGenerateGraph = async (text: string, slideIndex: number) => {
     try {
       const result = await generateGraph({ text });
-      setVisualAids(prev => [...prev, result.imageDataUri]);
+       setSlides(prev => 
+        prev.map((slide, index) => 
+          index === slideIndex 
+            ? { ...slide, visuals: [...slide.visuals, result.imageDataUri] } 
+            : slide
+        )
+      );
     } catch (error) {
       console.error(error);
       toast({
@@ -134,8 +145,6 @@ export function ContentGenerationForm() {
         title: 'Failed to generate graph.',
         description: 'There was a problem with the image generation model. Please try again.',
       });
-    } finally {
-      setGraphLoading(false);
     }
   };
 
@@ -276,22 +285,12 @@ export function ContentGenerationForm() {
         </Form>
       </div>
       <div className="lg:col-span-2">
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <ContentViewer 
-              content={generatedContent} 
-              isLoading={isLoading}
-              onGenerateVisual={handleGenerateVisualAid}
-              onGenerateGraph={handleGenerateGraph}
-            />
-          </div>
-          <div className="lg:col-span-1">
-            <VisualAidsPanel 
-              visualAids={visualAids} 
-              isLoading={isVisualAidLoading || isGraphLoading} 
-            />
-          </div>
-        </div>
+        <ContentViewer 
+          slides={slides} 
+          isLoading={isLoading}
+          onGenerateVisual={handleGenerateVisualAid}
+          onGenerateGraph={handleGenerateGraph}
+        />
       </div>
     </div>
   );
