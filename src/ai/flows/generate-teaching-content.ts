@@ -9,16 +9,14 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 
 const GenerateTeachingContentInputSchema = z.object({
+  grade: z.string().describe("The grade level for the content (e.g., 'Middle School (Grades 7-9)')"),
   subject: z.string().describe('The subject for which to generate teaching content.'),
-  topic: z.string().describe('The specific topic within the subject.'),
-  standard: z
-    .string()
-    .describe(
-      'The educational standard or grade level (e.g., Middle School, High School, University).'
-    ),
+  chapter: z.string().describe('The specific chapter within the subject.'),
+  topics: z.array(z.string()).describe('A list of topics to be covered in the presentation.'),
+  customTopic: z.string().optional().describe('An additional custom topic specified by the user.'),
   depthLevel: z
     .string()
     .describe(
@@ -52,17 +50,25 @@ const generateTeachingContentPrompt = ai.definePrompt({
   name: 'generateTeachingContentPrompt',
   input: {schema: GenerateTeachingContentInputSchema},
   output: {schema: GenerateTeachingContentOutputSchema},
-  prompt: `You are an expert curriculum designer creating a presentation. Generate the content for the following:
+  prompt: `You are an expert curriculum designer creating a presentation in the language '{{{language}}}'.
 
+Generate the content for the following:
+Grade Level: {{{grade}}}
 Subject: {{{subject}}}
-Topic: {{{topic}}}
-Standard/Grade Level: {{{standard}}}
+Chapter: {{{chapter}}}
 Depth Level: {{{depthLevel}}}
-Language: {{{language}}}
+
+Your task is to create a series of presentation slides covering the following topics:
+{{#each topics}}
+- {{{this}}}
+{{/each}}
+{{#if customTopic}}
+- {{{customTopic}}}
+{{/if}}
 
 IMPORTANT: You must generate the entire response in the requested language: **{{{language}}}**.
 
-Your task is to create a series of presentation slides. For each slide, provide two things:
+For each slide, provide two things:
 1.  The slide's content, formatted in Markdown. Each slide must have a title starting with '## ' and bullet points (-) for the main content. Use bold text (**key term**) for emphasis.
 2.  A concise, 5-10 word suggestion for a visual aid that would accompany the slide. This suggestion will be used as a prompt for an AI image generator. The suggestion must also be in the requested language: **{{{language}}}**.
 
