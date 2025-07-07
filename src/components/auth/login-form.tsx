@@ -40,7 +40,7 @@ export function LoginForm() {
           <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isLoading}>
             {isLoading ? <Loader2 className="animate-spin" /> : 'Login'}
           </Button>
-          <p className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground">
             Don't have an account?{' '}
             <Button variant="link" className="p-0 h-auto text-accent" onClick={() => {
                 // In a real app, this would go to a signup page
@@ -48,7 +48,7 @@ export function LoginForm() {
             }}>
               Sign Up
             </Button>
-          </p>
+          </div>
         </form>
       </CardContent>
     </Card>

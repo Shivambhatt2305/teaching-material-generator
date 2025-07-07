@@ -31,7 +31,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write('<html><head><title>TeachMate AI Material</title>');
-      printWindow.document.write('<style>body { font-family: "PT Sans", sans-serif; line-height: 1.6; } h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; } ul { padding-left: 20px; } li { margin-bottom: 0.5em; } .slide { border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem; } .slide-visuals { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; } .visual-wrapper { position: relative; width: 100%; padding-top: 56.25%; } .visual-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } @media print { .no-print { display: none; } .slide { border: none; padding: 0; margin-bottom: 1.5rem; page-break-after: always; } .slide-visuals { break-inside: avoid; } }</style>');
+      printWindow.document.write('<style>body { font-family: "PT Sans", sans-serif; line-height: 1.6; } h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; } ul { padding-left: 20px; list-style: disc; } li { margin-bottom: 0.5em; } .slide { border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem; } .slide-visuals { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; } .visual-wrapper { position: relative; width: 100%; padding-top: 56.25%; } .visual-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } @media print { .no-print { display: none; } .slide { border: none; padding: 0; margin-bottom: 1.5rem; page-break-after: always; } .slide-visuals { break-inside: avoid; } }</style>');
       printWindow.document.write('</head><body>');
       printWindow.document.write(contentElement.innerHTML);
       printWindow.document.write('</body></html>');
@@ -81,18 +81,29 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
   };
 
   const renderSlideContent = (slideContent: string) => {
-    return slideContent.split('\n').map((line, index) => {
-      line = line.trim();
-      if (line.startsWith('## ')) {
-        return <h2 key={index} className="text-2xl font-bold mt-4 mb-3 border-b pb-2">{line.substring(3)}</h2>;
+    const elements: React.ReactNode[] = [];
+    const lines = slideContent.split('\n');
+    let listItems: React.ReactNode[] = [];
+
+    const flushList = () => {
+      if (listItems.length > 0) {
+        elements.push(<ul key={`ul-${elements.length}`} className="list-disc ml-6 space-y-2">{listItems}</ul>);
+        listItems = [];
       }
-      if (line.startsWith('### ')) {
-        return <h3 key={index} className="text-xl font-semibold mt-4 mb-2">{line.substring(4)}</h3>;
-      }
-      if (line.startsWith('- ')) {
-        const parts = line.substring(2).split(/(\*\*.*?\*\*)/g);
-        return (
-          <li key={index} className="ml-6 list-disc my-2 leading-relaxed">
+    };
+
+    lines.forEach((line, index) => {
+      const trimmedLine = line.trim();
+      if (trimmedLine.startsWith('## ')) {
+        flushList();
+        elements.push(<h2 key={index} className="text-2xl font-bold mt-4 mb-3 border-b pb-2">{trimmedLine.substring(3)}</h2>);
+      } else if (trimmedLine.startsWith('### ')) {
+        flushList();
+        elements.push(<h3 key={index} className="text-xl font-semibold mt-4 mb-2">{trimmedLine.substring(4)}</h3>);
+      } else if (trimmedLine.startsWith('- ')) {
+        const parts = trimmedLine.substring(2).split(/(\*\*.*?\*\*)/g);
+        listItems.push(
+          <li key={index} className="leading-relaxed">
             {parts.map((part, i) => {
               if (part.startsWith('**') && part.endsWith('**')) {
                 return <strong key={i}>{part.slice(2, -2)}</strong>;
@@ -101,22 +112,24 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
             })}
           </li>
         );
+      } else if (trimmedLine) {
+        flushList();
+        const parts = trimmedLine.split(/(\*\*.*?\*\*)/g);
+        elements.push(
+          <p key={index} className="my-2 leading-relaxed">
+            {parts.map((part, i) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={i}>{part.slice(2, -2)}</strong>;
+              }
+              return part;
+            })}
+          </p>
+        );
       }
-      if (line.trim() === '') {
-        return null;
-      }
-      const parts = line.split(/(\*\*.*?\*\*)/g);
-      return (
-        <p key={index} className="my-2 leading-relaxed">
-          {parts.map((part, i) => {
-            if (part.startsWith('**') && part.endsWith('**')) {
-              return <strong key={i}>{part.slice(2, -2)}</strong>;
-            }
-            return part;
-          })}
-        </p>
-      );
     });
+
+    flushList();
+    return elements;
   };
 
   const renderFormattedContent = () => {
