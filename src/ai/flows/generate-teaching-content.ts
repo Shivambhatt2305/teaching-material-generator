@@ -14,6 +14,7 @@ import {z} from 'genkit';
 const GenerateTeachingContentInputSchema = z.object({
   subject: z.string().describe('The subject for which to generate teaching content.'),
   topic: z.string().describe('The specific topic within the subject.'),
+  standard: z.string().describe('The educational standard or grade level (e.g., Middle School, High School, University).'),
   depthLevel: z
     .string()
     .describe(
@@ -27,7 +28,7 @@ export type GenerateTeachingContentInput = z.infer<
 const GenerateTeachingContentOutputSchema = z.object({
   teachingContent: z
     .string()
-    .describe('The generated teaching content, including explanations, examples, and key points.'),
+    .describe('The generated teaching content, formatted in Markdown. It should include headings, lists, and bold text for key points.'),
 });
 export type GenerateTeachingContentOutput = z.infer<
   typeof GenerateTeachingContentOutputSchema
@@ -43,13 +44,16 @@ const generateTeachingContentPrompt = ai.definePrompt({
   name: 'generateTeachingContentPrompt',
   input: {schema: GenerateTeachingContentInputSchema},
   output: {schema: GenerateTeachingContentOutputSchema},
-  prompt: `You are an experienced teacher. Generate teaching content for the following subject, topic, and depth level:
+  prompt: `You are an experienced teacher. Generate teaching content for the following subject, topic, standard, and depth level:
 
 Subject: {{{subject}}}
 Topic: {{{topic}}}
+Standard/Grade Level: {{{standard}}}
 Depth Level: {{{depthLevel}}}
 
-The teaching content should include explanations, examples, and key points. Format it in a way that is easy for students to understand.`,
+The teaching content should include explanations, examples, and key points. 
+Format the entire output in Markdown. Use headings (## for main sections, ### for subsections), bullet points (-), and bold text (**key term**) for emphasis. 
+Ensure the content is well-structured and easy for students to understand. Do not include any text before or after the markdown content.`,
 });
 
 const generateTeachingContentFlow = ai.defineFlow(

@@ -26,20 +26,25 @@ import { Loader2, Sparkles } from 'lucide-react';
 
 import { suggestTopics, SuggestTopicsOutput } from '@/ai/flows/suggest-topics';
 import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
+import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
 import { ContentViewer } from './content-viewer';
 import { VisualAidsPanel } from './visual-aids-panel';
 
 const formSchema = z.object({
   subject: z.string().min(2, { message: 'Subject must be at least 2 characters.' }),
   topic: z.string().min(2, { message: 'Topic must be at least 2 characters.' }),
+  standard: z.string({ required_error: 'Please select a standard.' }),
   depthLevel: z.string({ required_error: 'Please select a depth level.' }),
 });
 
 export function ContentGenerationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [isVisualAidLoading, setVisualAidLoading] = useState(false);
+
   const [generatedContent, setGeneratedContent] = useState('');
   const [topicSuggestions, setTopicSuggestions] = useState<string[]>([]);
+  const [visualAids, setVisualAids] = useState<string[]>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,6 +85,7 @@ export function ContentGenerationForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setGeneratedContent('');
+    setVisualAids([]); // Clear previous visuals
     try {
       const result = await generateTeachingContent(values);
       setGeneratedContent(result.teachingContent);
@@ -94,6 +100,23 @@ export function ContentGenerationForm() {
       setIsLoading(false);
     }
   }
+
+  const handleGenerateVisualAid = async (text: string) => {
+    setVisualAidLoading(true);
+    try {
+      const result = await generateVisualAid({ text });
+      setVisualAids(prev => [...prev, result.imageDataUri]);
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Failed to generate visual.',
+        description: 'There was a problem with the image generation model. Please try again.',
+      });
+    } finally {
+      setVisualAidLoading(false);
+    }
+  };
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -129,7 +152,7 @@ export function ContentGenerationForm() {
             
             <Button type="button" variant="outline" onClick={handleTopicSuggest} disabled={isSuggestionsLoading} className="w-full">
               {isSuggestionsLoading ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-              Suggest Topics
+              Suggest Sub-Topics
             </Button>
             
             {topicSuggestions.length > 0 && (
@@ -147,6 +170,29 @@ export function ContentGenerationForm() {
                     </ul>
                 </div>
             )}
+             <FormField
+              control={form.control}
+              name="standard"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Standard / Grade Level</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select standard" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="middle-school">Middle School</SelectItem>
+                      <SelectItem value="high-school">High School</SelectItem>
+                      <SelectItem value="university">University</SelectItem>
+                       <SelectItem value="professional">Professional</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="depthLevel"
@@ -178,10 +224,14 @@ export function ContentGenerationForm() {
       <div className="lg:col-span-2">
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <ContentViewer content={generatedContent} isLoading={isLoading} />
+            <ContentViewer 
+              content={generatedContent} 
+              isLoading={isLoading}
+              onGenerateVisual={handleGenerateVisualAid}
+            />
           </div>
           <div className="lg:col-span-1">
-            <VisualAidsPanel />
+            <VisualAidsPanel visualAids={visualAids} isLoading={isVisualAidLoading} />
           </div>
         </div>
       </div>
