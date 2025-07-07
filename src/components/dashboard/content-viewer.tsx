@@ -87,7 +87,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
       return `
         <div class="slide">
           <div class="slide-main-content">
-            ${contentHtml}
+            <div class="slide-content-text">${contentHtml}</div>
             ${visualsHtml}
           </div>
           <div class="slide-footer">
@@ -108,13 +108,12 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
         }
         .slide {
           box-sizing: border-box;
-          width: 100%;
+          width: 100vw;
           height: 100vh;
           padding: 4rem 5rem;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: flex-start;
+          justify-content: space-between;
           position: relative;
           page-break-after: always;
           overflow: hidden;
@@ -125,9 +124,15 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
         }
         .slide-main-content {
           width: 100%;
+          height: calc(100% - 4rem);
+          display: flex;
+          flex-direction: column;
+        }
+        .slide-content-text {
+          flex-shrink: 0;
         }
         .slide-title {
-          font-size: 2.8em;
+          font-size: 2.5em;
           font-weight: 700;
           color: #1E293B; /* slate-800 */
           margin-bottom: 1.5rem;
@@ -145,7 +150,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
           padding-left: 0;
         }
         .slide-bullets li {
-          font-size: 1.4em;
+          font-size: 1.3em;
           line-height: 1.6;
           color: #475569; /* slate-600 */
           margin-bottom: 0.75em;
@@ -161,25 +166,37 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
           line-height: 1;
         }
         .slide-visuals {
-          margin-top: 2rem;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          padding-top: 1rem;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
           gap: 1.5rem;
+          width: 100%;
+          flex: 1;
+          min-height: 0;
         }
         .visual-container {
           border-radius: 0.5rem;
           overflow: hidden;
-          border: 1px solid #e2e8f0; /* slate-200 */
+          border: 1px solid #e2e8f0;
           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          max-height: 100%;
+          flex: 1 1 45%;
         }
         .visual-container img {
           width: 100%;
-          height: auto;
+          height: 100%;
+          object-fit: contain;
           display: block;
         }
         .slide-footer {
           position: absolute;
-          bottom: 2rem;
+          bottom: 1.5rem;
           left: 5rem;
           right: 5rem;
           display: flex;
@@ -199,7 +216,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
           height: 1.2em;
         }
         @page {
-          size: A4 landscape;
+          size: landscape;
           margin: 0;
         }
         @media print {
