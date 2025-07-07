@@ -220,7 +220,7 @@ const curriculumData = [
             { name: "Chemistry", chapters: [
                 { name: "Chemical Reactions and Equations", topics: ["Balancing Chemical Equations", "Types of Chemical Reactions", "Corrosion and Rancidity"] },
                 { name: "Acids, Bases and Salts", topics: ["pH Scale", "Important Acids, Bases, and Salts", "Making of Plaster of Paris"] },
-                { name:_("Carbon and its Compounds"), topics: ["Covalent Bonding in Carbon", "Versatile Nature of Carbon", "Homologous Series", "Soaps and Detergents"] },
+                { name: "Carbon and its Compounds", topics: ["Covalent Bonding in Carbon", "Versatile Nature of Carbon", "Homologous Series", "Soaps and Detergents"] },
             ]},
             { name: "Biology", chapters: [
                 { name: "Life Processes", topics: ["Nutrition", "Respiration", "Transportation", "Excretion"] },
@@ -695,5 +695,3 @@ export function ContentGenerationForm() {
     </div>
   );
 }
-
-    
