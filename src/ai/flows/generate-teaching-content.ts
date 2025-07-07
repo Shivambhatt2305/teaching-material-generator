@@ -28,7 +28,7 @@ export type GenerateTeachingContentInput = z.infer<
 const GenerateTeachingContentOutputSchema = z.object({
   teachingContent: z
     .string()
-    .describe('The generated teaching content, formatted in Markdown. It should include headings, lists, and bold text for key points.'),
+    .describe('The generated teaching content, formatted in Markdown for a presentation. It should include slides separated by "---SLIDE---", with each slide having a title and bullet points.'),
 });
 export type GenerateTeachingContentOutput = z.infer<
   typeof GenerateTeachingContentOutputSchema
@@ -44,16 +44,20 @@ const generateTeachingContentPrompt = ai.definePrompt({
   name: 'generateTeachingContentPrompt',
   input: {schema: GenerateTeachingContentInputSchema},
   output: {schema: GenerateTeachingContentOutputSchema},
-  prompt: `You are an experienced teacher. Generate teaching content for the following subject, topic, standard, and depth level:
+  prompt: `You are an expert curriculum designer creating a presentation. Generate the content for the following:
 
 Subject: {{{subject}}}
 Topic: {{{topic}}}
 Standard/Grade Level: {{{standard}}}
 Depth Level: {{{depthLevel}}}
 
-The teaching content should include explanations, examples, and key points. 
-Format the entire output in Markdown. Use headings (## for main sections, ### for subsections), bullet points (-), and bold text (**key term**) for emphasis. 
-Ensure the content is well-structured and easy for students to understand. Do not include any text before or after the markdown content.`,
+Format the entire output in Markdown. Structure the content as a series of slides.
+Use '---SLIDE---' as a separator between each slide.
+Each slide should have a title starting with '## '.
+Use bullet points (-) for the main content of each slide.
+Use bold text (**key term**) for emphasis.
+Ensure the content is well-structured and easy for students to understand.
+Do not include any text before the first slide or after the last slide.`,
 });
 
 const generateTeachingContentFlow = ai.defineFlow(

@@ -27,13 +27,14 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { suggestTopics, SuggestTopicsOutput } from '@/ai/flows/suggest-topics';
 import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
 import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
+import { generateGraph } from '@/ai/flows/generate-graph';
 import { ContentViewer } from './content-viewer';
 import { VisualAidsPanel } from './visual-aids-panel';
 
 const formSchema = z.object({
   subject: z.string().min(2, { message: 'Subject must be at least 2 characters.' }),
   topic: z.string().min(2, { message: 'Topic must be at least 2 characters.' }),
-  standard: z.string({ required_error: 'Please select a standard.' }),
+  standard: z.string({ required_error: 'Please select a grade level.' }),
   depthLevel: z.string({ required_error: 'Please select a depth level.' }),
 });
 
@@ -41,6 +42,7 @@ export function ContentGenerationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuggestionsLoading, setSuggestionsLoading] = useState(false);
   const [isVisualAidLoading, setVisualAidLoading] = useState(false);
+  const [isGraphLoading, setGraphLoading] = useState(false);
 
   const [generatedContent, setGeneratedContent] = useState('');
   const [topicSuggestions, setTopicSuggestions] = useState<string[]>([]);
@@ -117,6 +119,23 @@ export function ContentGenerationForm() {
       setVisualAidLoading(false);
     }
   };
+  
+  const handleGenerateGraph = async (text: string) => {
+    setGraphLoading(true);
+    try {
+      const result = await generateGraph({ text });
+      setVisualAids(prev => [...prev, result.imageDataUri]);
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Failed to generate graph.',
+        description: 'There was a problem with the image generation model. Please try again.',
+      });
+    } finally {
+      setGraphLoading(false);
+    }
+  };
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -175,18 +194,20 @@ export function ContentGenerationForm() {
               name="standard"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Standard / Grade Level</FormLabel>
+                  <FormLabel>Grade Level</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select standard" />
+                        <SelectValue placeholder="Select grade level" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="middle-school">Middle School</SelectItem>
-                      <SelectItem value="high-school">High School</SelectItem>
+                      <SelectItem value="elementary-early">Elementary School (Grades 1-3)</SelectItem>
+                      <SelectItem value="elementary-late">Elementary School (Grades 4-6)</SelectItem>
+                      <SelectItem value="middle-school">Middle School (Grades 7-9)</SelectItem>
+                      <SelectItem value="high-school">High School (Grades 10-12)</SelectItem>
                       <SelectItem value="university">University</SelectItem>
-                       <SelectItem value="professional">Professional</SelectItem>
+                       <SelectItem value="professional">Professional Development</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -228,10 +249,14 @@ export function ContentGenerationForm() {
               content={generatedContent} 
               isLoading={isLoading}
               onGenerateVisual={handleGenerateVisualAid}
+              onGenerateGraph={handleGenerateGraph}
             />
           </div>
           <div className="lg:col-span-1">
-            <VisualAidsPanel visualAids={visualAids} isLoading={isVisualAidLoading} />
+            <VisualAidsPanel 
+              visualAids={visualAids} 
+              isLoading={isVisualAidLoading || isGraphLoading} 
+            />
           </div>
         </div>
       </div>
