@@ -34,6 +34,51 @@ import { ContentViewer, type Slide } from './content-viewer';
 
 const curriculumData = [
     {
+        grade: "Elementary School (Grades 1-3)",
+        subjects: [
+            {
+                name: "Math",
+                chapters: [
+                    { name: "Basic Counting", topics: ["Counting to 20", "Counting by Tens", "Number Recognition"] },
+                    { name: "Simple Addition", topics: ["Adding numbers up to 10", "Addition Word Problems", "Making 10"] },
+                ]
+            },
+            {
+                name: "Science",
+                chapters: [
+                    { name: "Living Things", topics: ["Plants and Animals", "What Living Things Need", "Habitats"] },
+                    { name: "Weather", topics: ["Sunny, Rainy, Windy", "The Four Seasons", "Observing Weather"] },
+                ]
+            }
+        ]
+    },
+    {
+        grade: "Elementary School (Grades 4-6)",
+        subjects: [
+            {
+                name: "Math",
+                chapters: [
+                    { name: "Multiplication and Division", topics: ["Multiplication Facts", "Long Division", "Word Problems"] },
+                    { name: "Fractions", topics: ["What is a Fraction?", "Equivalent Fractions", "Adding and Subtracting Fractions"] },
+                ]
+            },
+            {
+                name: "Science",
+                chapters: [
+                    { name: "The Solar System", topics: ["The Sun and Planets", "The Moon Phases", "Earth's Rotation"] },
+                    { name: "Simple Machines", topics: ["Levers and Pulleys", "Wheels and Axles", "Inclined Planes"] },
+                ]
+            },
+            {
+                name: "Social Studies",
+                chapters: [
+                    { name: "Local Government", topics: ["Mayor and City Council", "Community Services", "How Laws are Made"] },
+                    { name: "Map Skills", topics: ["Using a Compass Rose", "Reading a Map Key", "Latitude and Longitude"] },
+                ]
+            }
+        ]
+    },
+    {
         grade: "Middle School (Grades 7-9)",
         subjects: [
             {
@@ -41,12 +86,21 @@ const curriculumData = [
                 chapters: [
                     { name: "Cells", topics: ["Introduction to Cells", "Plant vs. Animal Cells", "The Microscope", "Cell Organelles"] },
                     { name: "Ecosystems", topics: ["What is an Ecosystem?", "Food Chains and Webs", "Producers, Consumers, Decomposers", "Biotic and Abiotic Factors"] },
+                    { name: "Chemistry Basics", topics: ["Atoms and Molecules", "The Periodic Table", "Chemical Reactions"] },
                 ]
             },
             {
                 name: "History",
                 chapters: [
                     { name: "Ancient Rome", topics: ["The Founding of Rome", "The Roman Republic", "The Roman Empire", "Fall of Rome"] },
+                    { name: "The Middle Ages", topics: ["Feudalism", "The Crusades", "The Black Death"] },
+                ]
+            },
+            {
+                name: "English",
+                chapters: [
+                    { name: "Grammar", topics: ["Parts of Speech", "Sentence Structure", "Punctuation"] },
+                    { name: "Literature", topics: ["Analyzing a Novel", "Poetry and Figurative Language", "Writing a Book Report"] },
                 ]
             }
         ]
@@ -59,12 +113,28 @@ const curriculumData = [
                 chapters: [
                     { name: "Photosynthesis", topics: ["Light-Dependent Reactions", "The Calvin Cycle", "Factors Affecting Photosynthesis", "Chloroplast Structure"] },
                     { name: "Genetics", topics: ["Mendelian Genetics", "DNA Structure and Replication", "Gene Expression", "Mutations"] },
+                    { name: "Evolution", topics: ["Natural Selection", "Evidence for Evolution", "Speciation"] },
                 ]
             },
             {
                 name: "Chemistry",
                 chapters: [
                     { name: "Atomic Structure", topics: ["Protons, Neutrons, Electrons", "Isotopes and Ions", "Electron Configurations", "The Periodic Table"] },
+                    { name: "Stoichiometry", topics: ["The Mole Concept", "Balancing Equations", "Limiting Reactants"] },
+                ]
+            },
+            {
+                name: "Physics",
+                chapters: [
+                    { name: "Kinematics", topics: ["Velocity and Acceleration", "Projectile Motion", "Newton's Laws of Motion"] },
+                    { name: "Electricity", topics: ["Ohm's Law", "Series and Parallel Circuits", "Magnetism"] },
+                ]
+            },
+            {
+                name: "World History",
+                chapters: [
+                    { name: "World War I", topics: ["Causes of WWI", "Major Battles", "The Treaty of Versailles"] },
+                    { name: "The Cold War", topics: ["The Iron Curtain", "The Space Race", "The Fall of the Soviet Union"] },
                 ]
             }
         ]
@@ -76,12 +146,14 @@ const curriculumData = [
                 name: "Computer Science",
                 chapters: [
                     { name: "Algorithms and Data Structures", topics: ["Big O Notation", "Sorting Algorithms", "Hash Tables", "Trees and Graphs"] },
+                    { name: "Operating Systems", topics: ["Process Management", "Memory Management", "File Systems"] },
                 ]
             },
             {
                 name: "Economics",
                 chapters: [
                     { name: "Microeconomics", topics: ["Supply and Demand", "Market Structures", "Consumer Theory", "Game Theory"] },
+                    { name: "Macroeconomics", topics: ["GDP and Economic Growth", "Inflation and Unemployment", "Monetary and Fiscal Policy"] },
                 ]
             }
         ]
