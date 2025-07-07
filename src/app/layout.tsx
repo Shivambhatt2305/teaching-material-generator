@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'TeachMate AI',
+  title: 'Shayak Material Generator',
   description: 'AI-powered material generation for teachers',
 };
 

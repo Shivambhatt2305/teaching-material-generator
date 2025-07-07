@@ -14,7 +14,7 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">
       <div className="flex items-center gap-2 font-semibold">
         <BookOpenCheck className="h-6 w-6 text-primary" />
-        <span className="font-headline text-lg">TeachMate AI</span>
+        <span className="font-headline text-lg">Shayak Material Generator</span>
       </div>
       <div className="ml-auto flex items-center gap-4">
         <Button variant="ghost" size="icon" className="rounded-full">

@@ -91,7 +91,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
             ${visualsHtml}
           </div>
           <div class="slide-footer">
-            <div class="logo">${bookIconSvg}<span>TeachMate AI</span></div>
+            <div class="logo">${bookIconSvg}<span>Shayak Material Generator</span></div>
             <div class="slide-number">${index + 1}</div>
           </div>
         </div>
@@ -228,7 +228,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
     printWindow.document.write(`
       <html>
         <head>
-          <title>TeachMate AI Material</title>
+          <title>Shayak Material Generator Material</title>
           ${styles}
         </head>
         <body>

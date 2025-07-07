@@ -25,7 +25,7 @@ export function LoginForm() {
     <Card className="w-full shadow-lg">
       <CardHeader>
         <CardTitle>Welcome Back!</CardTitle>
-        <CardDescription>Sign in to continue to TeachMate AI.</CardDescription>
+        <CardDescription>Sign in to continue to Shayak Material Generator.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-4">
