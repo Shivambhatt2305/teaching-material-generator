@@ -14,12 +14,17 @@ import {z} from 'genkit';
 const GenerateTeachingContentInputSchema = z.object({
   subject: z.string().describe('The subject for which to generate teaching content.'),
   topic: z.string().describe('The specific topic within the subject.'),
-  standard: z.string().describe('The educational standard or grade level (e.g., Middle School, High School, University).'),
+  standard: z
+    .string()
+    .describe(
+      'The educational standard or grade level (e.g., Middle School, High School, University).'
+    ),
   depthLevel: z
     .string()
     .describe(
       'The depth level of the teaching content (e.g., introductory, intermediate, advanced).'
     ),
+  language: z.string().describe('The language for the teaching content.'),
 });
 export type GenerateTeachingContentInput = z.infer<
   typeof GenerateTeachingContentInputSchema
@@ -50,6 +55,9 @@ Subject: {{{subject}}}
 Topic: {{{topic}}}
 Standard/Grade Level: {{{standard}}}
 Depth Level: {{{depthLevel}}}
+Language: {{{language}}}
+
+IMPORTANT: You must generate the entire response in the requested language: **{{{language}}}**.
 
 Format the entire output in Markdown. Structure the content as a series of slides.
 Use '---SLIDE---' as a separator between each slide.

@@ -36,6 +36,7 @@ const formSchema = z.object({
   topic: z.string().min(2, { message: 'Topic must be at least 2 characters.' }),
   standard: z.string({ required_error: 'Please select a grade level.' }),
   depthLevel: z.string({ required_error: 'Please select a depth level.' }),
+  language: z.string({ required_error: 'Please select a language.' }),
 });
 
 export function ContentGenerationForm() {
@@ -54,6 +55,7 @@ export function ContentGenerationForm() {
     defaultValues: {
       subject: '',
       topic: '',
+      language: 'English',
     },
   });
 
@@ -230,6 +232,37 @@ export function ContentGenerationForm() {
                       <SelectItem value="introductory">Introductory</SelectItem>
                       <SelectItem value="intermediate">Intermediate</SelectItem>
                       <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="language"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Language</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="Hindi">Hindi (हिन्दी)</SelectItem>
+                      <SelectItem value="Bengali">Bengali (বাংলা)</SelectItem>
+                      <SelectItem value="Telugu">Telugu (తెలుగు)</SelectItem>
+                      <SelectItem value="Marathi">Marathi (मराठी)</SelectItem>
+                      <SelectItem value="Tamil">Tamil (தமிழ்)</SelectItem>
+                      <SelectItem value="Urdu">Urdu (اردو)</SelectItem>
+                      <SelectItem value="Gujarati">Gujarati (ગુજરાતી)</SelectItem>
+                      <SelectItem value="Kannada">Kannada (ಕನ್ನಡ)</SelectItem>
+                      <SelectItem value="Odia">Odia (ଓଡ଼ିଆ)</SelectItem>
+                      <SelectItem value="Malayalam">Malayalam (മലയാളം)</SelectItem>
+                      <SelectItem value="Punjabi">Punjabi (ਪੰਜਾਬੀ)</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
