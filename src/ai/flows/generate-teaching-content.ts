@@ -30,10 +30,13 @@ export type GenerateTeachingContentInput = z.infer<
   typeof GenerateTeachingContentInputSchema
 >;
 
+const SlideSchema = z.object({
+  content: z.string().describe("The Markdown content for a single slide, including a title and bullet points."),
+  visualAidSuggestion: z.string().describe("A concise, 5-10 word prompt for an AI image generator to create a relevant visual aid for this slide's content."),
+});
+
 const GenerateTeachingContentOutputSchema = z.object({
-  teachingContent: z
-    .string()
-    .describe('The generated teaching content, formatted in Markdown for a presentation. It should include slides separated by "---SLIDE---", with each slide having a title and bullet points.'),
+  slides: z.array(SlideSchema).describe("An array of presentation slides."),
 });
 export type GenerateTeachingContentOutput = z.infer<
   typeof GenerateTeachingContentOutputSchema
@@ -59,13 +62,11 @@ Language: {{{language}}}
 
 IMPORTANT: You must generate the entire response in the requested language: **{{{language}}}**.
 
-Format the entire output in Markdown. Structure the content as a series of slides.
-Use '---SLIDE---' as a separator between each slide.
-Each slide should have a title starting with '## '.
-Use bullet points (-) for the main content of each slide.
-Use bold text (**key term**) for emphasis.
-Ensure the content is well-structured and easy for students to understand.
-Do not include any text before the first slide or after the last slide.`,
+Your task is to create a series of presentation slides. For each slide, provide two things:
+1.  The slide's content, formatted in Markdown. Each slide must have a title starting with '## ' and bullet points (-) for the main content. Use bold text (**key term**) for emphasis.
+2.  A concise, 5-10 word suggestion for a visual aid that would accompany the slide. This suggestion will be used as a prompt for an AI image generator. The suggestion must also be in the requested language: **{{{language}}}**.
+
+Structure your entire response as a JSON object that matches the output schema. Do not include any text before or after the JSON.`,
 });
 
 const generateTeachingContentFlow = ai.defineFlow(

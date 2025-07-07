@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Download, ImageIcon, BarChart3, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import Image from 'next/image';
 export interface Slide {
   id: number;
   content: string;
+  visualAidSuggestion: string;
   visuals: string[];
 }
 
@@ -21,8 +22,6 @@ interface ContentViewerProps {
 }
 
 export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateGraph }: ContentViewerProps) {
-  const [selectedText, setSelectedText] = useState('');
-  const [selectedSlideIndex, setSelectedSlideIndex] = useState<number | null>(null);
   const [generatingForSlide, setGeneratingForSlide] = useState<number | null>(null);
 
   const handlePrint = () => {
@@ -31,7 +30,7 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write('<html><head><title>TeachMate AI Material</title>');
-      printWindow.document.write('<style>body { font-family: "PT Sans", sans-serif; line-height: 1.6; } h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; } ul { padding-left: 20px; list-style: disc; } li { margin-bottom: 0.5em; } .slide { border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem; } .slide-visuals { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; } .visual-wrapper { position: relative; width: 100%; padding-top: 56.25%; } .visual-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } @media print { .no-print { display: none; } .slide { border: none; padding: 0; margin-bottom: 1.5rem; page-break-after: always; } .slide-visuals { break-inside: avoid; } }</style>');
+      printWindow.document.write('<style>body { font-family: "PT Sans", sans-serif; line-height: 1.6; } h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; } ul { padding-left: 20px; list-style: disc; } li { margin-bottom: 0.5em; } .slide { border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem; break-inside: avoid-page; } .slide-visuals { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; } .visual-wrapper { position: relative; width: 100%; padding-top: 56.25%; } .visual-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; } @media print { .no-print { display: none; } .slide { border: none; padding: 0; margin-bottom: 1.5rem; page-break-after: always; } .slide-visuals { break-inside: avoid; } }</style>');
       printWindow.document.write('</head><body>');
       printWindow.document.write(contentElement.innerHTML);
       printWindow.document.write('</body></html>');
@@ -40,43 +39,17 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
     }
   };
 
-  const handleSelection = () => {
-    const selection = window.getSelection();
-    const text = selection?.toString().trim();
-    if (text && text.length > 10 && text.length < 500) {
-      let node = selection?.anchorNode;
-      if (node) {
-        let parentElement = node.nodeType === 3 ? node.parentElement : node as HTMLElement;
-        while (parentElement) {
-          if (parentElement.dataset.slideIndex) {
-            setSelectedSlideIndex(parseInt(parentElement.dataset.slideIndex, 10));
-            setSelectedText(text);
-            return;
-          }
-          parentElement = parentElement.parentElement;
-        }
-      }
-    } else {
-        setSelectedText('');
-        setSelectedSlideIndex(null);
-    }
-  };
-
-  const handleGenerateVisualClick = async () => {
-    if (!selectedText || selectedSlideIndex === null) return;
-    setGeneratingForSlide(selectedSlideIndex);
-    await onGenerateVisual(selectedText, selectedSlideIndex);
-    setSelectedText('');
-    setSelectedSlideIndex(null);
+  const handleGenerateVisualClick = async (prompt: string, slideIndex: number) => {
+    if (!prompt) return;
+    setGeneratingForSlide(slideIndex);
+    await onGenerateVisual(prompt, slideIndex);
     setGeneratingForSlide(null);
   };
   
-  const handleGenerateGraphClick = async () => {
-    if (!selectedText || selectedSlideIndex === null) return;
-    setGeneratingForSlide(selectedSlideIndex);
-    await onGenerateGraph(selectedText, selectedSlideIndex);
-    setSelectedText('');
-    setSelectedSlideIndex(null);
+  const handleGenerateGraphClick = async (prompt: string, slideIndex: number) => {
+    if (!prompt) return;
+    setGeneratingForSlide(slideIndex);
+    await onGenerateGraph(prompt, slideIndex);
     setGeneratingForSlide(null);
   };
 
@@ -134,8 +107,8 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
 
   const renderFormattedContent = () => {
     return slides.map((slide, slideIndex) => (
-      <Card key={slide.id} data-slide-index={slideIndex} className="slide mb-6 shadow-md">
-        <CardContent className="p-6">
+      <Card key={slide.id} className="slide mb-6 shadow-md break-inside-avoid">
+        <CardContent className="p-6 pb-4">
           <div className="prose dark:prose-invert max-w-none">
             {renderSlideContent(slide.content)}
           </div>
@@ -151,10 +124,36 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
           {generatingForSlide === slideIndex && (
             <div className="mt-4 flex items-center justify-center text-muted-foreground">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              <span>Generating visual... Please wait.</span>
+              <span>Generating... This can take up to 30 seconds.</span>
             </div>
           )}
         </CardContent>
+        <CardFooter className="flex-col items-start gap-4 p-6 pt-2 no-print">
+          <div className="w-full text-sm text-muted-foreground">
+            <p className="font-semibold">Suggested Visual Prompt:</p>
+            <p className="italic">"{slide.visualAidSuggestion}"</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              onClick={() => handleGenerateVisualClick(slide.visualAidSuggestion, slideIndex)}
+              disabled={generatingForSlide !== null}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {generatingForSlide === slideIndex ? <Loader2 className="animate-spin" /> : <ImageIcon />}
+              Create Visual
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => handleGenerateGraphClick(slide.visualAidSuggestion, slideIndex)}
+              disabled={generatingForSlide !== null}
+              className="bg-accent hover:bg-accent/90 text-accent-foreground"
+            >
+              {generatingForSlide === slideIndex ? <Loader2 className="animate-spin" /> : <BarChart3 />}
+              Create Graph
+            </Button>
+          </div>
+        </CardFooter>
       </Card>
     ));
   };
@@ -165,25 +164,13 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
       <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
         <CardTitle>Generated Presentation</CardTitle>
         <div className="flex gap-2 flex-wrap no-print">
-          {selectedText && (
-            <>
-              <Button size="sm" onClick={handleGenerateVisualClick} disabled={generatingForSlide !== null} className="bg-primary hover:bg-primary/90">
-                {generatingForSlide !== null && selectedSlideIndex === generatingForSlide ? <Loader2 className="animate-spin" /> : <ImageIcon />}
-                Create Visual
-              </Button>
-              <Button size="sm" onClick={handleGenerateGraphClick} disabled={generatingForSlide !== null} className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                 {generatingForSlide !== null && selectedSlideIndex === generatingForSlide ? <Loader2 className="animate-spin" /> : <BarChart3 />}
-                Create Graph
-              </Button>
-            </>
-          )}
           <Button variant="outline" size="sm" onClick={handlePrint} disabled={slides.length === 0 || isLoading}>
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
         </div>
       </CardHeader>
-      <CardContent onMouseUp={handleSelection} onTouchEnd={handleSelection}>
+      <CardContent>
         {isLoading ? (
           <div className="space-y-4 p-4">
             <Skeleton className="h-8 w-[70%] mb-6" />

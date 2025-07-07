@@ -28,7 +28,7 @@ import { suggestTopics, SuggestTopicsOutput } from '@/ai/flows/suggest-topics';
 import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
 import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
 import { generateGraph } from '@/ai/flows/generate-graph';
-import { ContentViewer, Slide } from './content-viewer';
+import { ContentViewer, type Slide } from './content-viewer';
 
 const formSchema = z.object({
   subject: z.string().min(2, { message: 'Subject must be at least 2 characters.' }),
@@ -85,13 +85,14 @@ export function ContentGenerationForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setSlides([]);
+    setTopicSuggestions([]);
     try {
       const result = await generateTeachingContent(values);
-      const slideContents = result.teachingContent.split('---SLIDE---');
-      const newSlides = slideContents
-        .map((content, index) => ({
+      const newSlides: Slide[] = result.slides
+        .map((slide, index) => ({
           id: index,
-          content: content.trim(),
+          content: slide.content.trim(),
+          visualAidSuggestion: slide.visualAidSuggestion,
           visuals: [],
         }))
         .filter(slide => slide.content);
