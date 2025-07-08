@@ -16,12 +16,13 @@ export interface Slide {
 
 interface ContentViewerProps {
   slides: Slide[];
+  setSlides: React.Dispatch<React.SetStateAction<Slide[]>>;
   isLoading: boolean;
   onGenerateVisual: (text: string, slideIndex: number) => Promise<void>;
   onGenerateGraph: (text: string, slideIndex: number) => Promise<void>;
 }
 
-export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateGraph }: ContentViewerProps) {
+export function ContentViewer({ slides, isLoading }: ContentViewerProps) {
   const [generatingForSlide, setGeneratingForSlide] = useState<number | null>(null);
 
   const handlePrint = () => {
@@ -401,3 +402,11 @@ export function ContentViewer({ slides, isLoading, onGenerateVisual, onGenerateG
     </Card>
   );
 }
+function onGenerateVisual(prompt: string, slideIndex: number) {
+  throw new Error('Function not implemented.');
+}
+
+function onGenerateGraph(prompt: string, slideIndex: number) {
+  throw new Error('Function not implemented.');
+}
+

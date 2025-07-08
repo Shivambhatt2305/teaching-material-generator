@@ -28,7 +28,7 @@ import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
 import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
 import { generateGraph } from '@/ai/flows/generate-graph';
 import { ContentViewer, type Slide } from './content-viewer';
-<<<<<<< HEAD
+import { Textarea } from '../ui/textarea';
 
 const curriculumData = [
     {
@@ -371,9 +371,6 @@ const curriculumData = [
         ]
     }
 ];
-=======
-import { Textarea } from '../ui/textarea';
->>>>>>> 0d40f31 (removw this and also add that whatever teacher enter prompt it also gene)
 
 const formSchema = z.object({
   userPrompt: z.string().min(10, { message: "Please enter a prompt of at least 10 characters." }),
@@ -551,6 +548,7 @@ export function ContentGenerationForm() {
       <div className="lg:col-span-2">
         <ContentViewer 
           slides={slides} 
+          setSlides={setSlides}
           isLoading={isLoading}
           onGenerateVisual={handleGenerateVisualAid}
           onGenerateGraph={handleGenerateGraph}
