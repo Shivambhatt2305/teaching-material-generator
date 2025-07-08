@@ -59,6 +59,26 @@ Adhere strictly to the following formatting guidelines for each slide:
 2.  **Visual Aid Suggestion:** For each slide, provide a highly relevant, 5-10 word prompt for an AI image generator. This prompt must describe an educational diagram, simple illustration, or chart that visually explains the slide's core concept. The suggestion must also be in '{{{language}}}'.
 
 Your entire response MUST be a single, valid JSON object that conforms to the output schema. Do not include any explanatory text, markdown formatting ticks, or anything else outside of the JSON structure.`,
+  config: {
+    safetySettings: [
+      {
+        category: 'HARM_CATEGORY_HATE_SPEECH',
+        threshold: 'BLOCK_NONE',
+      },
+      {
+        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        threshold: 'BLOCK_NONE',
+      },
+      {
+        category: 'HARM_CATEGORY_HARASSMENT',
+        threshold: 'BLOCK_NONE',
+      },
+      {
+        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+        threshold: 'BLOCK_NONE',
+      },
+    ],
+  },
 });
 
 const generateTeachingContentFlow = ai.defineFlow(
@@ -69,6 +89,9 @@ const generateTeachingContentFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateTeachingContentPrompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('The AI model failed to generate a valid response.');
+    }
+    return output;
   }
 );
