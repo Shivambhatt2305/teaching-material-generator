@@ -46,7 +46,9 @@ const generateTeachingContentPrompt = ai.definePrompt({
   name: 'generateTeachingContentPrompt',
   input: {schema: GenerateTeachingContentInputSchema},
   output: {schema: GenerateTeachingContentOutputSchema},
-  prompt: `You are an expert instructional designer tasked with creating engaging and accurate teaching materials. Your output must be in the language '{{{language}}}'.
+  prompt: `IMPORTANT: Your entire output, including all content and visual aid suggestions, MUST be in the language '{{{language}}}'. Do not use any other language.
+
+You are an expert instructional designer tasked with creating engaging and accurate teaching materials.
 
 Please generate a presentation based on the following user request:
 - User Prompt: {{{userPrompt}}}

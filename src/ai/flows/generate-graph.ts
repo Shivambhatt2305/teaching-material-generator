@@ -36,6 +36,24 @@ const generateGraphFlow = ai.defineFlow(
       prompt: `Generate a clear and simple graph, chart, or data visualization that visually explains the following concept. The image should be professional, easy to understand, and suitable for a presentation slide. It should not contain much text, focusing on the visual representation of data or a process. Concept: "${input.text}"`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
+        safetySettings: [
+            {
+                category: 'HARM_CATEGORY_HATE_SPEECH',
+                threshold: 'BLOCK_NONE',
+            },
+            {
+                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                threshold: 'BLOCK_NONE',
+            },
+            {
+                category: 'HARM_CATEGORY_HARASSMENT',
+                threshold: 'BLOCK_NONE',
+            },
+            {
+                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                threshold: 'BLOCK_NONE',
+            },
+        ],
       },
     });
 

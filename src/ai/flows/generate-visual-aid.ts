@@ -36,6 +36,24 @@ const generateVisualAidFlow = ai.defineFlow(
       prompt: `Generate a clear, simple, educational visual aid, diagram, or illustration for the following concept. The image should be visually appealing and suitable for a presentation slide. Avoid using too much text in the image itself. The style should be clean and professional. Concept: "${input.text}"`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
+        safetySettings: [
+            {
+                category: 'HARM_CATEGORY_HATE_SPEECH',
+                threshold: 'BLOCK_NONE',
+            },
+            {
+                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                threshold: 'BLOCK_NONE',
+            },
+            {
+                category: 'HARM_CATEGORY_HARASSMENT',
+                threshold: 'BLOCK_NONE',
+            },
+            {
+                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                threshold: 'BLOCK_NONE',
+            },
+        ],
       },
     });
 
