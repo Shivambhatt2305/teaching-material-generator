@@ -550,8 +550,6 @@ export function ContentGenerationForm() {
           slides={slides} 
           setSlides={setSlides}
           isLoading={isLoading}
-          onGenerateVisual={handleGenerateVisualAid}
-          onGenerateGraph={handleGenerateGraph}
         />
       </div>
     </div>

@@ -5,12 +5,18 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +26,31 @@ export function LoginForm() {
       router.push('/dashboard');
     }, 1000);
   };
+
+  if (!isMounted) {
+    return (
+        <Card className="w-full shadow-lg">
+            <CardHeader>
+                <Skeleton className="h-8 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+            </CardHeader>
+            <CardContent className="space-y-4 pt-6">
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+                <Skeleton className="h-10 w-full mt-4" />
+                <div className="text-center text-sm text-muted-foreground pt-2">
+                    <Skeleton className="h-4 w-3/4 mx-auto" />
+                </div>
+            </CardContent>
+        </Card>
+    );
+  }
 
   return (
     <Card className="w-full shadow-lg">

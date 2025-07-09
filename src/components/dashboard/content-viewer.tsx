@@ -1,12 +1,17 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Download, ImageIcon, BarChart3, Loader2 } from 'lucide-react';
+import { Download, ImageIcon, BarChart3, Loader2, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import Image from 'next/image';
+import { useToast } from '@/hooks/use-toast';
+import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
+import { generateGraph } from '@/ai/flows/generate-graph';
 
+import { Textarea } from '@/components/ui/textarea';
 export interface Slide {
   id: number;
   content: string;
@@ -18,12 +23,66 @@ interface ContentViewerProps {
   slides: Slide[];
   setSlides: React.Dispatch<React.SetStateAction<Slide[]>>;
   isLoading: boolean;
-  onGenerateVisual: (text: string, slideIndex: number) => Promise<void>;
-  onGenerateGraph: (text: string, slideIndex: number) => Promise<void>;
 }
 
-export function ContentViewer({ slides, isLoading }: ContentViewerProps) {
+export function ContentViewer({ slides, setSlides, isLoading }: ContentViewerProps) {
   const [generatingForSlide, setGeneratingForSlide] = useState<number | null>(null);
+  const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
+  const [editPrompt, setEditPrompt] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const { toast } = useToast();
+
+  const handleGenerateVisual = async (text: string, slideIndex: number) => {
+    if (!text) return;
+    setGeneratingForSlide(slideIndex);
+    try {
+      const result = await generateVisualAid({ text });
+      // This state update pattern ensures we are working with the latest state
+      // by using a function inside setSlides.
+      setSlides(prev => 
+        prev.map((slide, index) => 
+          index === slideIndex 
+            ? { ...slide, visuals: [...(slide.visuals || []), result.imageDataUri] } 
+            : slide
+        )
+      );
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Failed to generate visual.',
+        description: 'There was a problem with the image generation model. Please try again.',
+      });
+    } finally {
+      setGeneratingForSlide(null);
+    }
+  };
+  
+  const handleGenerateGraph = async (text: string, slideIndex: number) => {
+    if (!text) return;
+    setGeneratingForSlide(slideIndex);
+    try {
+      const result = await generateGraph({ text });
+      // Use functional update for safety
+       setSlides(prev => 
+        prev.map((slide, index) => 
+          index === slideIndex 
+            ? { ...slide, visuals: [...(slide.visuals || []), result.imageDataUri] } 
+            : slide
+        )
+      );
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Failed to generate graph.',
+        description: 'There was a problem with the image generation model. Please try again.',
+      });
+    } finally {
+      setGeneratingForSlide(null);
+    }
+  };
+
 
   const handlePrint = () => {
     if (slides.length === 0) return;
@@ -246,18 +305,25 @@ export function ContentViewer({ slides, isLoading }: ContentViewerProps) {
     }, 500);
   };
 
-  const handleGenerateVisualClick = async (prompt: string, slideIndex: number) => {
-    if (!prompt) return;
-    setGeneratingForSlide(slideIndex);
-    await onGenerateVisual(prompt, slideIndex);
-    setGeneratingForSlide(null);
-  };
   
-  const handleGenerateGraphClick = async (prompt: string, slideIndex: number) => {
-    if (!prompt) return;
-    setGeneratingForSlide(slideIndex);
-    await onGenerateGraph(prompt, slideIndex);
-    setGeneratingForSlide(null);
+  const handleEditSlide = async () => {
+    if (!editingSlide || !editPrompt) return;
+
+    setIsEditing(true);
+    try {
+      // Assuming you have a function to generate new content based on original content and edit prompt
+      // This is a placeholder, replace with your actual AI call for editing
+      const response = await fetch('/api/edit-slide', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slideContent: editingSlide.content, editPrompt }),
+      });
+      const data = await response.json();
+      // Update the slide with the new content and clear visual suggestions
+      setSlides(prev => prev.map(slide => slide.id === editingSlide.id ? { ...slide, content: data.newContent, visualAidSuggestion: data.newVisualSuggestion || '', visuals: [] } : slide));
+      setEditingSlide(null);
+      setEditPrompt('');
+    } finally { setIsEditing(false); }
   };
 
   const renderSlideContent = (slideContent: string) => {
@@ -343,7 +409,7 @@ export function ContentViewer({ slides, isLoading }: ContentViewerProps) {
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
-              onClick={() => handleGenerateVisualClick(slide.visualAidSuggestion, slideIndex)}
+              onClick={() => handleGenerateVisual(slide.visualAidSuggestion, slideIndex)}
               disabled={generatingForSlide !== null}
               className="bg-primary hover:bg-primary/90"
             >
@@ -352,13 +418,22 @@ export function ContentViewer({ slides, isLoading }: ContentViewerProps) {
             </Button>
             <Button
               size="sm"
-              onClick={() => handleGenerateGraphClick(slide.visualAidSuggestion, slideIndex)}
+              onClick={() => handleGenerateGraph(slide.visualAidSuggestion, slideIndex)}
               disabled={generatingForSlide !== null}
               className="bg-accent hover:bg-accent/90 text-accent-foreground"
             >
               {generatingForSlide === slideIndex ? <Loader2 className="animate-spin" /> : <BarChart3 />}
               Create Graph
             </Button>
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditingSlide(slide)}
+                disabled={generatingForSlide !== null || !!editingSlide}
+              >
+                <Edit />
+                Edit Slide
+              </Button>
           </div>
         </CardFooter>
       </Card>
@@ -367,46 +442,78 @@ export function ContentViewer({ slides, isLoading }: ContentViewerProps) {
 
 
   return (
-    <Card className="min-h-[600px]">
-      <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
-        <CardTitle>Generated Presentation</CardTitle>
-        <div className="flex gap-2 flex-wrap no-print">
-          <Button variant="outline" size="sm" onClick={handlePrint} disabled={slides.length === 0 || isLoading}>
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="space-y-4 p-4">
-            <Skeleton className="h-8 w-[70%] mb-6" />
-            <Skeleton className="h-4 w-[90%] mt-4" />
-            <Skeleton className="h-4 w-[95%]" />
-            <Skeleton className="h-4 w-[80%]" />
-            <Skeleton className="h-8 w-[60%] mt-8 mb-6" />
-            <Skeleton className="h-4 w-[90%]" />
-            <Skeleton className="h-4 w-[85%]" />
+    <>
+      <Card className="min-h-[600px]">
+        <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
+          <CardTitle>Generated Presentation</CardTitle>
+          <div className="flex gap-2 flex-wrap no-print">
+            <Button variant="outline" size="sm" onClick={handlePrint} disabled={slides.length === 0 || isLoading}>
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
           </div>
-        ) : slides.length > 0 ? (
-            <div>
-              {renderFormattedContent()}
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4 p-4">
+              <Skeleton className="h-8 w-[70%] mb-6" />
+              <Skeleton className="h-4 w-[90%] mt-4" />
+              <Skeleton className="h-4 w-[95%]" />
+              <Skeleton className="h-4 w-[80%]" />
+              <Skeleton className="h-8 w-[60%] mt-8 mb-6" />
+              <Skeleton className="h-4 w-[90%]" />
+              <Skeleton className="h-4 w-[85%]" />
             </div>
-        ) : (
-          <div className="flex h-[400px] flex-col items-center justify-center rounded-md border border-dashed text-center text-muted-foreground">
-            <p className="font-medium">Your generated presentation will appear here.</p>
-            <p className="text-sm">Fill out the form and click "Generate Material".</p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          ) : slides.length > 0 ? (
+              <div>
+                {renderFormattedContent()}
+              </div>
+          ) : (
+            <div className="flex h-[400px] flex-col items-center justify-center rounded-md border border-dashed text-center text-muted-foreground">
+              <p className="font-medium">Your generated presentation will appear here.</p>
+              <p className="text-sm">Fill out the form and click "Generate Material".</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingSlide} onOpenChange={(isOpen) => { if (!isOpen) { setEditingSlide(null); setEditPrompt(''); } }}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Edit Slide</DialogTitle>
+            <DialogDescription>
+              Enter your instructions below to revise the slide content. The AI will rewrite it for you.
+            </DialogDescription>
+          </DialogHeader>
+          {editingSlide && (
+            <div className="grid gap-4 py-4">
+              <div className="space-y-2">
+                <h4 className="font-semibold">Original Content</h4>
+                <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border p-4 max-h-48 overflow-y-auto bg-muted/50">
+                  {renderSlideContent(editingSlide.content)}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="edit-prompt" className="font-semibold">Your Edit Instructions</label>
+                <Textarea
+                  id="edit-prompt"
+                  placeholder="e.g., 'Make this simpler for a younger audience.' or 'Add a real-world example about...'"
+                  value={editPrompt}
+                  onChange={(e) => setEditPrompt(e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditingSlide(null)}>Cancel</Button>
+            <Button onClick={handleEditSlide} disabled={isEditing || !editPrompt}>
+              {isEditing ? <Loader2 className="animate-spin" /> : 'Update Slide'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
-function onGenerateVisual(prompt: string, slideIndex: number) {
-  throw new Error('Function not implemented.');
-}
-
-function onGenerateGraph(prompt: string, slideIndex: number) {
-  throw new Error('Function not implemented.');
-}
-
