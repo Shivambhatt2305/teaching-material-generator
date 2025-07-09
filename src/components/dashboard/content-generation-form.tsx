@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -22,16 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Lightbulb } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 import { generateTeachingContent } from '@/ai/flows/generate-teaching-content';
 import { generateVisualAid } from '@/ai/flows/generate-visual-aid';
 import { generateGraph } from '@/ai/flows/generate-graph';
-import { suggestTopics } from '@/ai/flows/suggest-topics';
 import { ContentViewer, type Slide } from './content-viewer';
+<<<<<<< HEAD
 
 const curriculumData = [
     {
@@ -374,79 +371,30 @@ const curriculumData = [
         ]
     }
 ];
+=======
+import { Textarea } from '../ui/textarea';
+>>>>>>> 0d40f31 (removw this and also add that whatever teacher enter prompt it also gene)
 
 const formSchema = z.object({
-  grade: z.string({ required_error: 'Please select a grade level.' }),
-  subject: z.string({ required_error: 'Please select a subject.' }),
-  chapter: z.string({ required_error: 'Please select a chapter.' }),
-  topics: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: 'You have to select at least one topic.',
-  }),
-  addCustomTopic: z.boolean().default(false),
-  customTopic: z.string().optional(),
+  userPrompt: z.string().min(10, { message: "Please enter a prompt of at least 10 characters." }),
   depthLevel: z.string({ required_error: 'Please select a depth level.' }),
   language: z.string({ required_error: 'Please select a language.' }),
-}).refine(data => {
-    if (data.addCustomTopic && !data.customTopic) {
-        return false;
-    }
-    return true;
-}, {
-    message: "Please enter your custom topic.",
-    path: ["customTopic"],
 });
 
-type CurriculumItem = { name: string; chapters?: any[]; topics?: string[] };
 
 export function ContentGenerationForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuggesting, setIsSuggesting] = useState(false);
   const [slides, setSlides] = useState<Slide[]>([]);
   const { toast } = useToast();
-
-  const [subjects, setSubjects] = useState<CurriculumItem[]>([]);
-  const [chapters, setChapters] = useState<CurriculumItem[]>([]);
-  const [availableTopics, setAvailableTopics] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      topics: [],
-      addCustomTopic: false,
-      customTopic: "",
+      userPrompt: "",
       language: 'English',
       depthLevel: 'intermediate',
     },
   });
-
-  const grade = form.watch("grade");
-  const subject = form.watch("subject");
-  const chapter = form.watch("chapter");
-  const addCustomTopic = form.watch("addCustomTopic");
-
-  useEffect(() => {
-    form.resetField("subject");
-    form.resetField("chapter");
-    form.resetField("topics", { defaultValue: [] });
-    const selectedGrade = curriculumData.find(g => g.grade === grade);
-    setSubjects(selectedGrade?.subjects || []);
-    setChapters([]);
-    setAvailableTopics([]);
-  }, [grade, form]);
-
-  useEffect(() => {
-    form.resetField("chapter");
-    form.resetField("topics", { defaultValue: [] });
-    const selectedSubject = subjects.find(s => s.name === subject);
-    setChapters(selectedSubject?.chapters || []);
-    setAvailableTopics([]);
-  }, [subject, subjects, form]);
-
-  useEffect(() => {
-    form.resetField("topics", { defaultValue: [] });
-    const selectedChapter = chapters.find(c => c.name === chapter);
-    setAvailableTopics(selectedChapter?.topics || []);
-  }, [chapter, chapters, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -514,198 +462,33 @@ export function ContentGenerationForm() {
     }
   };
 
-  const handleTopicSuggest = async () => {
-    if (!subject || !chapter) return;
-    setIsSuggesting(true);
-    try {
-      const result = await suggestTopics({ subject, mainTopic: chapter });
-      const newTopics = result.suggestedTopics.filter(t => !availableTopics.includes(t));
-      setAvailableTopics(prev => [...prev, ...newTopics]);
-      toast({
-          title: 'New topics suggested!',
-          description: 'We\'ve added a few more topic ideas to the list for you.',
-      });
-    } catch (error) {
-        console.error("Failed to suggest topics", error);
-        toast({
-            variant: 'destructive',
-            title: 'Failed to suggest topics.',
-            description: 'There was a problem with the AI model. Please try again.',
-        });
-    } finally {
-        setIsSuggesting(false);
-    }
-  };
-
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       <div className="lg:col-span-1">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 rounded-lg border bg-card p-6 shadow-sm">
+            
             <FormField
               control={form.control}
-              name="grade"
+              name="userPrompt"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Grade Level</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select grade level..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {curriculumData.map(item => (
-                         <SelectItem key={item.grade} value={item.grade}>{item.grade}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Your Topic or Prompt</FormLabel>
+                   <FormControl>
+                    <Textarea
+                      placeholder="e.g., 'An introduction to the solar system for 5th graders' or 'Explain Newton's Laws of Motion with simple examples.'"
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Describe the presentation you want to create. Be as specific as you like.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {subjects.length > 0 && (
-                <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Subject</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value ?? ''}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select subject..." />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {subjects.map(item => (
-                            <SelectItem key={item.name} value={item.name}>{item.name}</SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            )}
-            {chapters.length > 0 && (
-                <FormField
-                control={form.control}
-                name="chapter"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Chapter</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value ?? ''}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select chapter..." />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {chapters.map(item => (
-                            <SelectItem key={item.name} value={item.name}>{item.name}</SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            )}
-            {availableTopics.length > 0 && (
-              <FormField
-                control={form.control}
-                name="topics"
-                render={() => (
-                  <FormItem>
-                    <div className="mb-4">
-                      <FormLabel className="text-base">Topics to Cover</FormLabel>
-                      <FormDescription>
-                        Select the topics you want to include in the presentation.
-                      </FormDescription>
-                    </div>
-                    <div className="space-y-3">
-                      {availableTopics.map((item) => (
-                        <FormField
-                          key={item}
-                          control={form.control}
-                          name="topics"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item}
-                                className="flex flex-row items-start space-x-3 space-y-0"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(item)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...(field.value || []), item])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                              (value) => value !== item
-                                            )
-                                          );
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal">{item}</FormLabel>
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <FormMessage className="pt-2" />
-                    <div className="mt-4">
-                        <Button type="button" variant="outline" size="sm" onClick={handleTopicSuggest} disabled={isSuggesting || !chapter}>
-                            {isSuggesting ? <Loader2 className="animate-spin" /> : <Lightbulb />}
-                            Suggest More Topics
-                        </Button>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            )}
             
-            <FormField
-              control={form.control}
-              name="addCustomTopic"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>Add a Custom Topic?</FormLabel>
-                    <FormDescription>
-                      Include an additional topic not in the list.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {addCustomTopic && (
-                <FormField
-                    control={form.control}
-                    name="customTopic"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Custom Topic</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., The Role of AI in Genetics" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            )}
-
             <FormField
               control={form.control}
               name="depthLevel"
